@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-editorial: 'Newsreader', Georgia, serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --font-sans-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans-ui);
+    color: #111827;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-sans-ui {
+  font-family: var(--font-sans-ui);
+}
+
+/* Custom editorial drop cap */
+.editorial-drop-cap::first-letter {
+  font-family: var(--font-editorial);
+  font-size: 4.25rem;
+  line-height: 0.85;
+  float: left;
+  margin-top: 0.15rem;
+  margin-right: 0.75rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Print & reading tweaks */
+@media print {
+  header, footer, .no-print {
+    display: none !important;
+  }
+}

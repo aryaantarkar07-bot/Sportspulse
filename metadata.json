@@ -1,0 +1,6 @@
+{
+  "name": "SPORTSPULSE",
+  "description": "SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY. Long-form magazine sports journalism covering Cricket, Football, Hockey, Kabaddi, and global athletics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
