@@ -1,13 +1,15 @@
 import React from 'react';
 import { ArrowRight, Clock, ChevronRight } from 'lucide-react';
-import { Article, SportCategory } from '../types';
+import { Article, PlayerData, SportCategory } from '../types';
 import { SportsArtwork } from './SportsArtwork';
+import { PlayerRosterStrip } from './PlayerRosterStrip';
 
 interface SportSectionProps {
   sport: SportCategory;
   emoji: string;
   largeArticle: Article;
   sideArticles: Article[];
+  players?: PlayerData[];
   onSelectArticle: (article: Article) => void;
   onViewCategory?: (sport: SportCategory) => void;
 }
@@ -17,6 +19,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
   emoji,
   largeArticle,
   sideArticles,
+  players,
   onSelectArticle,
   onViewCategory,
 }) => {
@@ -123,6 +126,15 @@ export const SportSection: React.FC<SportSectionProps> = ({
             ))}
           </div>
         </div>
+
+        {/* Player Photos Roster Section */}
+        {players && players.length > 0 && (
+          <PlayerRosterStrip
+            sport={sport}
+            players={players}
+            title={`${sport} Players Defining the Next Generation`}
+          />
+        )}
       </div>
     </section>
   );

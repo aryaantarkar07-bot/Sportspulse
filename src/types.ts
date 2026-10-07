@@ -22,6 +22,25 @@ export interface PlayerProfile {
   team: string;
   stats: string;
   bio: string;
+  imageUrl?: string;
+  jerseyNumber?: string | number;
+  nationality?: string;
+  accentColor?: string;
+}
+
+export interface PlayerData {
+  id: string;
+  name: string;
+  sport: SportCategory;
+  role: string;
+  team: string;
+  nationality: string;
+  jerseyNumber?: string | number;
+  stats: string;
+  bio: string;
+  quote?: string;
+  imageUrl: string;
+  accentColor: string;
 }
 
 export interface ArticleSection {
