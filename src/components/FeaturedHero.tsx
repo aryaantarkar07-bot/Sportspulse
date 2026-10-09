@@ -20,6 +20,8 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
           <SportsArtwork
             category={article.category}
             title={article.title}
+            variant={article.heroVariant || 'hero'}
+            personality={article.featuredPersonality}
             aspectRatio="16/9"
             className="w-full max-h-[580px] group-hover:scale-101 transition-transform duration-500"
             priority

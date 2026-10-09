@@ -12,6 +12,7 @@ interface SportSectionProps {
   players?: PlayerData[];
   onSelectArticle: (article: Article) => void;
   onViewCategory?: (sport: SportCategory) => void;
+  onSelectPlayer?: (player: PlayerData) => void;
 }
 
 export const SportSection: React.FC<SportSectionProps> = ({
@@ -22,6 +23,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
   players,
   onSelectArticle,
   onViewCategory,
+  onSelectPlayer,
 }) => {
   return (
     <section className="py-12 border-b border-stone-200 bg-white">
@@ -57,6 +59,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
                 <SportsArtwork
                   category={largeArticle.category}
                   title={largeArticle.title}
+                  personality={largeArticle.featuredPersonality}
                   aspectRatio="16/9"
                   className="w-full h-auto group-hover:scale-101 transition-transform duration-300"
                 />
@@ -132,7 +135,8 @@ export const SportSection: React.FC<SportSectionProps> = ({
           <PlayerRosterStrip
             sport={sport}
             players={players}
-            title={`${sport} Players Defining the Next Generation`}
+            title={`${sport} Athlete Roster & Crickbuzz-Style Dossiers`}
+            onSelectPlayer={onSelectPlayer}
           />
         )}
       </div>

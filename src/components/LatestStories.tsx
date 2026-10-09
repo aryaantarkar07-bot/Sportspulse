@@ -42,6 +42,7 @@ export const LatestStories: React.FC<LatestStoriesProps> = ({ articles, onSelect
                   <SportsArtwork
                     category={article.category}
                     title={article.title}
+                    personality={article.featuredPersonality}
                     aspectRatio="16/9"
                     className="w-full h-auto group-hover:scale-102 transition-transform duration-300"
                   />

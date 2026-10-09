@@ -13,7 +13,12 @@ import {
   KABADDI_ARTICLES,
   HOCKEY_ARTICLES,
 } from './data/sportsData';
-import { Article, SportCategory } from './types';
+import {
+  PLAYERS,
+  getPlayersBySport,
+  getPlayerBySlug,
+} from './data/playersData';
+import { Article, PlayerData, SportCategory } from './types';
 import { Header } from './components/Header';
 import { FeaturedHero } from './components/FeaturedHero';
 import { LatestStories } from './components/LatestStories';
@@ -22,14 +27,25 @@ import { KabaddiFeature } from './components/KabaddiFeature';
 import { TrendingList } from './components/TrendingList';
 import { ArticleView } from './components/ArticleView';
 import { CategoryHub } from './components/CategoryHub';
+import { PlayerProfileView } from './components/PlayerProfileView';
 import { SearchModal } from './components/SearchModal';
 import { SavedModal } from './components/SavedModal';
 import { ArchitectureModal } from './components/ArchitectureModal';
 import { Footer } from './components/Footer';
+import {
+  parseCurrentRoute,
+  navigateTo,
+  getHomeUrl,
+  getCategoryUrl,
+  getArticleUrl,
+  getPlayerUrl,
+  getSportSlug,
+} from './utils/router';
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState<SportCategory | 'ALL'>('ALL');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<PlayerData | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [savedModalOpen, setSavedModalOpen] = useState(false);
   const [architectureOpen, setArchitectureOpen] = useState(false);
@@ -52,6 +68,52 @@ export default function App() {
     }
   }, [savedArticleIds]);
 
+  // Synchronize component state with browser URL
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const route = parseCurrentRoute();
+
+      if (route.type === 'home') {
+        setSelectedArticle(null);
+        setSelectedPlayer(null);
+        setActiveCategory('ALL');
+        document.title = 'SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY.';
+      } else if (route.type === 'category') {
+        setSelectedArticle(null);
+        setSelectedPlayer(null);
+        setActiveCategory(route.category);
+        document.title = `${route.category} Longform Desk & Athlete Dossiers | SPORTSPULSE`;
+      } else if (route.type === 'article') {
+        const art =
+          ARTICLES.find((a) => a.slug === route.slug || a.id === route.slug) || null;
+        setSelectedArticle(art);
+        setSelectedPlayer(null);
+        if (art) {
+          setActiveCategory(art.category);
+          document.title = `${art.title} | SPORTSPULSE`;
+        }
+      } else if (route.type === 'player') {
+        const p = getPlayerBySlug(route.slug);
+        setSelectedPlayer(p || null);
+        setSelectedArticle(null);
+        if (p) {
+          setActiveCategory(p.sport);
+          document.title = `${p.name} - ${p.sport} Profile, Career Stats & Dossier | SPORTSPULSE`;
+        }
+      }
+    };
+
+    // Initial route check on mount
+    handleLocationChange();
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
   const toggleBookmark = (art: Article) => {
     setSavedArticleIds((prev) =>
       prev.includes(art.id) ? prev.filter((id) => id !== art.id) : [...prev, art.id]
@@ -67,11 +129,11 @@ export default function App() {
   // The featured centerpiece article
   const featuredArticle = ARTICLES.find((a) => a.isFeatured) || ARTICLES[0];
 
-  // Cricket section: Large article + 2 side articles
+  // Cricket section: Large article + 2 side articles + 5-6 Stars with Cricbuzz Dossiers
   const cricketLarge = CRICKET_ARTICLES[0] || ARTICLES[0];
   const cricketSides = [
     {
-      ...ARTICLES[6], // Badminton or other fast-paced article
+      ...ARTICLES[6],
       id: 'cricket-tactical-pace-depth',
       category: 'Cricket' as SportCategory,
       title: "The Reverse-Swing Renaissance: Why Low Arm Release Angles Confound Red-Ball Openers",
@@ -87,8 +149,9 @@ export default function App() {
       readTime: '7 min read',
     }
   ];
+  const cricketPlayers = getPlayersBySport('Cricket');
 
-  // Football section: Large article + 2 side articles
+  // Football section: Large article + 2 side articles + 6 Stars
   const footballLarge = FOOTBALL_ARTICLES[0] || ARTICLES[1];
   const footballSides = [
     {
@@ -108,6 +171,7 @@ export default function App() {
       readTime: '8 min read',
     }
   ];
+  const footballPlayers = getPlayersBySport('Football');
 
   // Kabaddi section lead
   const kabaddiLead = KABADDI_ARTICLES[0] || ARTICLES[2];
@@ -118,14 +182,43 @@ export default function App() {
       ? ARTICLES
       : ARTICLES.filter((a) => a.category === activeCategory);
 
+  // Navigation handlers that update clean semantic URLs
   const handleSelectArticle = (art: Article) => {
     setSelectedArticle(art);
+    setSelectedPlayer(null);
+    navigateTo(getArticleUrl(art.category, art.slug));
+    document.title = `${art.title} | SPORTSPULSE`;
     window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  const handleSelectPlayer = (player: PlayerData) => {
+    setSelectedPlayer(player);
+    setSelectedArticle(null);
+    navigateTo(getPlayerUrl(player.sport, player.slug));
+    document.title = `${player.name} - ${player.sport} Profile, Career Stats & Dossier | SPORTSPULSE`;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  const handleSelectCategory = (cat: SportCategory | 'ALL') => {
+    setActiveCategory(cat);
+    setSelectedArticle(null);
+    setSelectedPlayer(null);
+    if (cat === 'ALL') {
+      navigateTo(getHomeUrl());
+      document.title = 'SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY.';
+    } else {
+      navigateTo(getCategoryUrl(cat));
+      document.title = `${cat} Longform Desk & Athlete Dossiers | SPORTSPULSE`;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateHome = () => {
     setSelectedArticle(null);
+    setSelectedPlayer(null);
     setActiveCategory('ALL');
+    navigateTo(getHomeUrl());
+    document.title = 'SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY.';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -134,11 +227,7 @@ export default function App() {
       {/* Universal Top Navigation Header */}
       <Header
         activeCategory={activeCategory}
-        onSelectCategory={(cat) => {
-          setActiveCategory(cat);
-          setSelectedArticle(null);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onSelectCategory={handleSelectCategory}
         onOpenSearch={() => setSearchOpen(true)}
         onOpenBookmarks={() => setSavedModalOpen(true)}
         savedCount={savedArticleIds.length}
@@ -148,24 +237,43 @@ export default function App() {
 
       {/* Main View Switcher */}
       <main className="flex-1">
-        {selectedArticle ? (
+        {selectedPlayer ? (
+          /* Cricbuzz-Inspired Athlete Dossier Profile Page */
+          <PlayerProfileView
+            player={selectedPlayer}
+            onBack={() => {
+              if (selectedPlayer.sport) {
+                handleSelectCategory(selectedPlayer.sport);
+              } else {
+                handleNavigateHome();
+              }
+            }}
+            onSelectPlayer={handleSelectPlayer}
+            onSelectArticle={handleSelectArticle}
+          />
+        ) : selectedArticle ? (
           /* Magazine Longform Article Page */
           <ArticleView
             article={selectedArticle}
             onBack={() => {
-              setSelectedArticle(null);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              if (selectedArticle.category) {
+                handleSelectCategory(selectedArticle.category);
+              } else {
+                handleNavigateHome();
+              }
             }}
             onSelectArticle={handleSelectArticle}
             isBookmarked={savedArticleIds.includes(selectedArticle.id)}
             onToggleBookmark={toggleBookmark}
           />
         ) : activeCategory !== 'ALL' ? (
-          /* Category Specific Hub View */
+          /* Category Specific Hub View with Articles & Player Roster */
           <CategoryHub
             category={activeCategory}
             articles={categoryArticles}
+            players={getPlayersBySport(activeCategory)}
             onSelectArticle={handleSelectArticle}
+            onSelectPlayer={handleSelectPlayer}
             onBackToHome={handleNavigateHome}
           />
         ) : (
@@ -183,36 +291,35 @@ export default function App() {
               onSelectArticle={handleSelectArticle}
             />
 
-            {/* 3. CRICKET SECTION (Large Article + 2 Side Articles) */}
+            {/* 3. CRICKET SECTION (Large Article + 2 Side Articles + Crickbuzz Player Dossiers) */}
             <SportSection
               sport="Cricket"
               emoji="🏏"
               largeArticle={cricketLarge}
               sideArticles={cricketSides}
+              players={cricketPlayers}
               onSelectArticle={handleSelectArticle}
-              onViewCategory={(cat) => {
-                setActiveCategory(cat);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onSelectPlayer={handleSelectPlayer}
+              onViewCategory={handleSelectCategory}
             />
 
-            {/* 4. FOOTBALL SECTION (Large Article + 2 Side Articles) */}
+            {/* 4. FOOTBALL SECTION (Large Article + 2 Side Articles + Star Dossiers) */}
             <SportSection
               sport="Football"
               emoji="⚽"
               largeArticle={footballLarge}
               sideArticles={footballSides}
+              players={footballPlayers}
               onSelectArticle={handleSelectArticle}
-              onViewCategory={(cat) => {
-                setActiveCategory(cat);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onSelectPlayer={handleSelectPlayer}
+              onViewCategory={handleSelectCategory}
             />
 
-            {/* 5. KABADDI SECTION (Articles + Images + Video) */}
+            {/* 5. KABADDI SECTION (Articles + Images + Video + Players) */}
             <KabaddiFeature
               article={kabaddiLead}
               onSelectArticle={handleSelectArticle}
+              onSelectPlayer={handleSelectPlayer}
             />
 
             {/* 6. TRENDING SECTION (01, 02, 03...) */}
@@ -226,11 +333,7 @@ export default function App() {
 
       {/* Global Editorial Footer */}
       <Footer
-        onSelectCategory={(cat) => {
-          setActiveCategory(cat);
-          setSelectedArticle(null);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onSelectCategory={handleSelectCategory}
         onOpenArchitectureModal={() => setArchitectureOpen(true)}
       />
 
@@ -239,7 +342,9 @@ export default function App() {
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
         articles={ARTICLES}
+        players={PLAYERS}
         onSelectArticle={handleSelectArticle}
+        onSelectPlayer={handleSelectPlayer}
       />
 
       <SavedModal

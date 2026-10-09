@@ -1,23 +1,30 @@
 import React from 'react';
-import { ArrowLeft, Clock, ArrowRight } from 'lucide-react';
-import { Article, SportCategory } from '../types';
+import { ArrowLeft, Clock, ArrowRight, Users } from 'lucide-react';
+import { Article, PlayerData, SportCategory } from '../types';
 import { SportsArtwork } from './SportsArtwork';
+import { PlayerRosterStrip } from './PlayerRosterStrip';
+import { getPlayersBySport } from '../data/playersData';
 
 interface CategoryHubProps {
   category: SportCategory;
   articles: Article[];
+  players?: PlayerData[];
   onSelectArticle: (article: Article) => void;
+  onSelectPlayer?: (player: PlayerData) => void;
   onBackToHome: () => void;
 }
 
 export const CategoryHub: React.FC<CategoryHubProps> = ({
   category,
   articles,
+  players,
   onSelectArticle,
+  onSelectPlayer,
   onBackToHome,
 }) => {
   const leadArticle = articles[0];
   const otherArticles = articles.slice(1);
+  const sportPlayers = players && players.length > 0 ? players : getPlayersBySport(category);
 
   return (
     <section className="py-8 bg-white min-h-[70vh]">
@@ -56,6 +63,7 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
               <SportsArtwork
                 category={leadArticle.category}
                 title={leadArticle.title}
+                personality={leadArticle.featuredPersonality}
                 aspectRatio="16/9"
                 className="w-full h-full min-h-[320px]"
               />
@@ -133,6 +141,16 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
               New comprehensive features from the {category} desk are dispatched daily at 07:00 AM.
             </p>
           </div>
+        )}
+        {/* Cricbuzz-Inspired Player Dossier Roster Strip */}
+        {sportPlayers.length > 0 && (
+          <PlayerRosterStrip
+            sport={category}
+            players={sportPlayers}
+            title={`${category} Stars & Cricbuzz-Style Profiles`}
+            subtitle={`In-depth career records, historical milestones, and tactical analysis for ${category} icons.`}
+            onSelectPlayer={onSelectPlayer}
+          />
         )}
       </div>
     </section>

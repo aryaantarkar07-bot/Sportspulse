@@ -47,9 +47,9 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
     </div>
 
     <div class="prose">
-      <p class="drop-cap">${sampleArticle.sections[0].paragraphs[0]}</p>
+      <p class="drop-cap">${sampleArticle.sections[0]?.paragraphs?.[0] ?? ''}</p>
       <h2>The Changing Landscape</h2>
-      <p>${sampleArticle.sections[1].paragraphs[0]}</p>
+      <p>${sampleArticle.sections[1]?.paragraphs?.[0] ?? ''}</p>
     </div>
   </article>
 </body>

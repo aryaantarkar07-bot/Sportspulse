@@ -44,7 +44,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         <span className="text-xl font-bold font-mono tracking-tight text-white">
           {player.name
             .split(' ')
-            .map((n) => n[0])
+            .map((n: string) => n[0])
             .join('')
             .slice(0, 2)}
         </span>
@@ -241,12 +241,26 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
                 </div>
               )}
 
-              <div className="pt-2 flex justify-end">
+              <div className="pt-2 flex justify-between items-center gap-3">
+                {onSelect ? (
+                  <button
+                    onClick={() => {
+                      setModalOpen(false);
+                      onSelect(player);
+                    }}
+                    className="px-4 py-2 bg-rose-600 text-white text-xs font-semibold rounded-lg hover:bg-rose-700 flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>View Full Dossier Page</span>
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <div />
+                )}
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="px-5 py-2 bg-stone-900 text-white text-xs font-semibold rounded-lg hover:bg-stone-800"
+                  className="px-5 py-2 bg-stone-900 text-white text-xs font-semibold rounded-lg hover:bg-stone-800 transition-colors"
                 >
-                  Close Dossier
+                  Close
                 </button>
               </div>
             </div>

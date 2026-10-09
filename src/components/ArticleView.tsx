@@ -10,16 +10,16 @@ import {
   Check,
   Clock,
   Calendar,
-  User,
-  ExternalLink,
-  ChevronRight,
+  Image as ImageIcon,
   Maximize2,
-  Sliders,
-  Type
+  X,
+  Layers,
+  ChevronRight
 } from 'lucide-react';
-import { Article } from '../types';
+import { Article, SupportingImage, FamousPersonality, SportEvent } from '../types';
 import { ARTICLES } from '../data/sportsData';
-import { SportsArtwork } from './SportsArtwork';
+import { SportsArtwork, ArtworkVariant } from './SportsArtwork';
+import { getArticleUrl } from '../utils/router';
 
 interface ArticleViewProps {
   article: Article;
@@ -46,7 +46,17 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
   // Video player interactive state
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoMuted, setIsVideoMuted] = useState(false);
-  const [videoProgress, setVideoProgress] = useState(24);
+
+  // Lightbox modal for examining any image
+  const [activeLightbox, setActiveLightbox] = useState<{
+    title: string;
+    caption: string;
+    credit: string;
+    variant: ArtworkVariant;
+    figureNumber?: string;
+    personality?: FamousPersonality;
+    event?: SportEvent;
+  } | null>(null);
 
   // Track scroll depth
   useEffect(() => {
@@ -77,7 +87,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
 
   const handleShare = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+      const canonicalUrl = `${window.location.origin}${getArticleUrl(article.category, article.slug)}`;
+      navigator.clipboard.writeText(canonicalUrl);
       setCopiedShare(true);
       setTimeout(() => setCopiedShare(false), 2500);
     }
@@ -123,7 +134,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors uppercase tracking-wider"
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors uppercase tracking-wider cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Stories</span>
@@ -142,7 +153,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             >
               <Volume2 className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">
-                {isPlayingAudio ? `Playing (${formatAudioTime(audioSeconds)})` : 'Listen (12 min)'}
+                {isPlayingAudio ? `Playing (${formatAudioTime(audioSeconds)})` : `Listen (${article.readTime})`}
               </span>
             </button>
 
@@ -217,7 +228,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           </span>
           <span aria-hidden="true" className="text-stone-300">·</span>
           <span className="text-xs uppercase tracking-wider text-stone-500 font-mono">
-            MAGAZINE FEATURE
+            LONG-FORM INVESTIGATION
           </span>
         </div>
 
@@ -258,31 +269,131 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               <span>{article.readTime}</span>
             </span>
             <span aria-hidden="true" className="text-stone-300">·</span>
-            <span className="text-stone-600 font-medium">
+            <span className="text-stone-900 font-semibold bg-stone-100 px-2 py-0.5 rounded">
               {article.wordCount.toLocaleString()} words
             </span>
           </div>
         </div>
       </header>
 
-      {/* Large Hero Image */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-12">
-        <div className="rounded-xl overflow-hidden border border-stone-200 shadow-sm">
+      {/* 1. MAIN IMAGE: Large Hero Image (Famous Sports Personality) */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-10">
+        <div
+          onClick={() =>
+            setActiveLightbox({
+              title: article.title,
+              caption: article.heroCaption,
+              credit: article.heroCredit,
+              variant: article.heroVariant || 'player',
+              personality: article.featuredPersonality,
+              figureNumber: 'MAIN COVER'
+            })
+          }
+          className="group relative rounded-2xl overflow-hidden border border-stone-200 shadow-sm cursor-pointer"
+        >
           <SportsArtwork
             category={article.category}
             title={article.title}
+            variant={article.heroVariant || 'player'}
+            personality={article.featuredPersonality}
             aspectRatio="16/9"
-            className="w-full h-auto max-h-[580px]"
+            className="w-full h-auto max-h-[580px] group-hover:scale-101 transition-transform duration-500"
             priority
           />
+          <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Maximize2 className="w-3.5 h-3.5" />
+            <span>Enlarge Cover</span>
+          </div>
         </div>
+
         <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-stone-500 gap-1 px-1">
-          <span className="italic font-serif">{article.heroCaption}</span>
+          <div>
+            {article.featuredPersonality && (
+              <span className="font-semibold text-stone-900 mr-2">
+                Featured: {article.featuredPersonality.name} ({article.featuredPersonality.country}) —
+              </span>
+            )}
+            <span className="italic font-serif">{article.heroCaption}</span>
+          </div>
           <span className="font-mono text-[11px] text-stone-400 uppercase shrink-0">
             {article.heroCredit}
           </span>
         </div>
       </div>
+
+      {/* 2 to 3 SMALL SUPPORTING IMAGES: Quick Visual Index Strip (Respective Events) */}
+      {article.supportingImages && article.supportingImages.length > 0 && (
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-12">
+          <div className="p-4 bg-stone-50 rounded-2xl border border-stone-200/90">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-rose-600" />
+                <span className="text-xs font-bold uppercase tracking-wider text-stone-800 font-sans">
+                  Respective Event Documentation ({article.supportingImages.length} Official Match & Venue Figures)
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-stone-400">
+                Click any event to inspect
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {article.supportingImages.map((img, idx) => (
+                <div
+                  key={idx}
+                  onClick={() =>
+                    setActiveLightbox({
+                      title: img.title,
+                      caption: img.caption,
+                      credit: img.credit,
+                      variant: img.variant,
+                      event: img.event,
+                      figureNumber: img.figureNumber
+                    })
+                  }
+                  className="group cursor-pointer bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-xs transition-all flex flex-col justify-between"
+                >
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <SportsArtwork
+                      category={article.category}
+                      title={img.title}
+                      variant={img.variant}
+                      event={img.event}
+                      figureNumber={img.figureNumber}
+                      aspectRatio="16/9"
+                      className="w-full h-full group-hover:scale-103 transition-transform"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <div className="flex items-center justify-between text-[10px] font-mono mb-1">
+                      <span className="font-bold text-rose-600">{img.figureNumber}</span>
+                      {img.event ? (
+                        <span className="text-amber-700 font-bold uppercase truncate max-w-[140px]">
+                          {img.event.tournament}
+                        </span>
+                      ) : (
+                        <span className="text-stone-400">{img.variant.toUpperCase()}</span>
+                      )}
+                    </div>
+                    <h5 className="font-editorial text-xs font-bold text-stone-900 group-hover:text-rose-600 transition-colors line-clamp-1 mb-1">
+                      {img.title}
+                    </h5>
+                    <p className="font-body text-[11px] text-stone-500 line-clamp-2 leading-relaxed">
+                      {img.caption}
+                    </p>
+                    {img.event && (
+                      <div className="mt-2 pt-2 border-t border-stone-100 text-[10px] font-mono text-stone-600 flex items-center justify-between">
+                        <span className="truncate">{img.event.venue}</span>
+                        <span className="text-stone-400 shrink-0">{img.event.location.split(',')[0]}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Reading Column Container */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
@@ -309,7 +420,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           </section>
         )}
 
-        {/* Article Sections Prose */}
+        {/* Article Sections Prose (Extensive, Longform Content) */}
         <div className="space-y-12">
           {article.sections.map((sec, secIdx) => (
             <section key={secIdx} className="space-y-6">
@@ -329,7 +440,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               )}
 
               {/* Prose Paragraphs */}
-              {sec.paragraphs.map((para, paraIdx) => (
+              {sec.paragraphs && sec.paragraphs.map((para, paraIdx) => (
                 <p
                   key={paraIdx}
                   className={`font-body text-stone-800 ${getFontSizeClasses()} ${
@@ -339,6 +450,63 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   {para}
                 </p>
               ))}
+
+              {/* In-Body Supporting Small Image (Fig 1, Fig 2, Fig 3 - Respective Events) */}
+              {sec.image && (
+                <figure className="my-8">
+                  <div
+                    onClick={() =>
+                      setActiveLightbox({
+                        title: sec.image?.title || sec.image?.caption || 'Supporting Figure',
+                        caption: sec.image?.caption || '',
+                        credit: sec.image?.credit || '',
+                        variant: sec.image?.variant || 'tactical',
+                        event: sec.image?.event,
+                        figureNumber: sec.image?.figureNumber || `FIG. ${secIdx}`
+                      })
+                    }
+                    className="group relative rounded-xl overflow-hidden border border-stone-200 shadow-xs cursor-pointer"
+                  >
+                    <SportsArtwork
+                      category={article.category}
+                      title={sec.image.title || sec.image.caption}
+                      variant={sec.image.variant || 'tactical'}
+                      event={sec.image.event}
+                      figureNumber={sec.image.figureNumber}
+                      aspectRatio="16/9"
+                      className="w-full max-h-[440px] group-hover:scale-101 transition-transform"
+                    />
+                    <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-[11px] px-2.5 py-1 rounded flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Maximize2 className="w-3 h-3" />
+                      <span>Inspect Event Figure</span>
+                    </div>
+                  </div>
+
+                  <figcaption className="mt-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between text-xs text-stone-600 gap-1 px-1">
+                    <div>
+                      {sec.image.event && (
+                        <div className="mb-1 text-[11px] font-mono text-stone-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="px-1.5 py-0.5 bg-amber-100 text-amber-900 rounded font-bold text-[10px]">
+                            OFFICIAL EVENT
+                          </span>
+                          <span className="text-stone-900">{sec.image.event.name}</span>
+                          <span className="text-stone-400">·</span>
+                          <span className="text-stone-500 font-normal">{sec.image.event.venue}, {sec.image.event.location}</span>
+                        </div>
+                      )}
+                      {sec.image.figureNumber && (
+                        <span className="font-mono font-bold text-rose-600 mr-2 uppercase">
+                          {sec.image.figureNumber}:
+                        </span>
+                      )}
+                      <span className="italic font-serif">{sec.image.caption}</span>
+                    </div>
+                    <span className="font-mono text-[10px] uppercase text-stone-400 shrink-0">
+                      {sec.image.credit}
+                    </span>
+                  </figcaption>
+                </figure>
+              )}
 
               {/* Statistical Data Table */}
               {sec.statsTable && (
@@ -389,26 +557,6 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       {sec.statsTable.footnote}
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* Supporting Graphic / Image */}
-              {sec.image && (
-                <div className="my-8">
-                  <div className="rounded-xl overflow-hidden border border-stone-200 shadow-xs">
-                    <SportsArtwork
-                      category={article.category}
-                      title={sec.image.caption}
-                      aspectRatio="16/9"
-                      className="w-full max-h-[420px]"
-                    />
-                  </div>
-                  <div className="mt-2.5 flex items-center justify-between text-xs text-stone-500 px-1">
-                    <span className="italic font-serif">{sec.image.caption}</span>
-                    <span className="font-mono text-[10px] uppercase text-stone-400">
-                      {sec.image.credit}
-                    </span>
-                  </div>
                 </div>
               )}
 
@@ -465,18 +613,16 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               {sec.video && (
                 <div className="my-10 rounded-xl overflow-hidden border border-stone-200 bg-stone-950 text-white shadow-lg">
                   <div className="relative aspect-video bg-stone-900 flex items-center justify-center overflow-hidden">
-                    {/* Simulated High-Res Video Canvas */}
                     <SportsArtwork
                       category={article.category}
                       title={sec.video.title}
+                      variant="action"
                       aspectRatio="16/9"
                       className="absolute inset-0 opacity-75"
                     />
 
-                    {/* Dark gradient for controls */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40" />
 
-                    {/* Badge */}
                     <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
                       <span className="px-2.5 py-1 bg-rose-600 text-white text-[10px] font-bold font-mono tracking-wider rounded">
                         {sec.video.previewBadge || 'VIDEO REEL'}
@@ -486,11 +632,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       </span>
                     </div>
 
-                    {/* Centered Play Button */}
                     <button
                       onClick={() => setIsVideoPlaying(!isVideoPlaying)}
                       className="relative z-10 w-16 h-16 rounded-full bg-white/95 text-stone-900 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-2xl group cursor-pointer"
-                      aria-label={isVideoPlaying ? 'Pause breakdown reel' : 'Play breakdown reel'}
+                      aria-label={isVideoPlaying ? 'Pause reel' : 'Play reel'}
                     >
                       {isVideoPlaying ? (
                         <Pause className="w-7 h-7 text-rose-600 fill-current" />
@@ -499,12 +644,11 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       )}
                     </button>
 
-                    {/* Bottom Controls Bar */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
                       <div className="w-full bg-white/20 h-1 rounded-full mb-3 overflow-hidden cursor-pointer">
                         <div
                           className="bg-rose-600 h-full transition-all duration-300"
-                          style={{ width: `${isVideoPlaying ? 58 : videoProgress}%` }}
+                          style={{ width: `${isVideoPlaying ? 64 : 22}%` }}
                         />
                       </div>
                       <div className="flex items-center justify-between text-xs text-white/90">
@@ -575,7 +719,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               PUBLISHED OCTOBER 2026
             </span>
             <span className="text-xs font-semibold text-rose-600">
-              Verified Editorial Standard
+              Verified Editorial Standard · {article.wordCount} words
             </span>
           </div>
         </div>
@@ -595,7 +739,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </div>
             <button
               onClick={onBack}
-              className="text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 flex items-center gap-1"
+              className="text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
             >
               <span>View All</span>
               <ChevronRight className="w-4 h-4" />
@@ -641,6 +785,73 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           </div>
         </div>
       </section>
+
+      {/* Lightbox Image Modal */}
+      {activeLightbox && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8">
+          <div className="max-w-4xl w-full bg-stone-900 rounded-2xl overflow-hidden border border-stone-800 text-white shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-4 border-b border-stone-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {activeLightbox.figureNumber && (
+                  <span className="px-2 py-0.5 bg-rose-600 text-[10px] font-mono font-bold rounded">
+                    {activeLightbox.figureNumber}
+                  </span>
+                )}
+                <span className="text-xs font-mono uppercase tracking-wider text-stone-400">
+                  {article.category} Visual Archive
+                </span>
+              </div>
+              <button
+                onClick={() => setActiveLightbox(null)}
+                className="p-1 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="relative aspect-video w-full bg-black">
+              <SportsArtwork
+                category={article.category}
+                title={activeLightbox.title}
+                variant={activeLightbox.variant}
+                figureNumber={activeLightbox.figureNumber}
+                personality={activeLightbox.personality}
+                event={activeLightbox.event}
+                aspectRatio="16/9"
+                className="w-full h-full"
+              />
+            </div>
+
+            <div className="p-5 bg-stone-950 border-t border-stone-800">
+              {activeLightbox.event && (
+                <div className="mb-2 text-xs font-mono text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                  <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-300 rounded font-bold text-[10px]">
+                    {activeLightbox.event.stage}
+                  </span>
+                  <span>{activeLightbox.event.name} — {activeLightbox.event.venue}, {activeLightbox.event.location}</span>
+                </div>
+              )}
+              {activeLightbox.personality && (
+                <div className="mb-2 text-xs font-mono text-rose-400 uppercase tracking-wider flex items-center gap-2">
+                  <span className="px-1.5 py-0.5 bg-rose-500/20 text-rose-300 rounded font-bold text-[10px]">
+                    FAMOUS ATHLETE
+                  </span>
+                  <span>{activeLightbox.personality.name} ({activeLightbox.personality.country}) — {activeLightbox.personality.honors}</span>
+                </div>
+              )}
+              <h4 className="font-editorial text-lg font-bold text-white mb-1.5">
+                {activeLightbox.title}
+              </h4>
+              <p className="font-body text-xs text-stone-300 leading-relaxed mb-3">
+                {activeLightbox.caption}
+              </p>
+              <div className="text-[11px] font-mono text-stone-500">
+                {activeLightbox.credit}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 };
