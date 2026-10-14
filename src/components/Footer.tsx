@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, Check, ShieldCheck, Mail } from 'lucide-react';
 import { SportCategory } from '../types';
 import { SPORT_CATEGORIES } from '../data/sportsData';
+import { getHomeUrl, getCategoryUrl } from '../utils/router';
 
 interface FooterProps {
   onSelectCategory: (cat: SportCategory | 'ALL') => void;
@@ -27,7 +28,17 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenArchitec
         <div className="flex flex-col lg:flex-row lg:items-end justify-between pb-12 border-b border-stone-200 gap-8">
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter uppercase font-sans text-stone-950 mb-2">
-              SPORTSPULSE
+              <a
+                href={getHomeUrl()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSelectCategory('ALL');
+                }}
+                className="hover:text-rose-600 transition-colors no-underline text-stone-950"
+                title="SPORTSPULSE Homepage"
+              >
+                SPORTSPULSE
+              </a>
             </h2>
             <p className="font-mono text-xs sm:text-sm tracking-widest text-stone-500 uppercase">
               EVERY SPORT. EVERY STORY. EVERY DAY.
@@ -77,22 +88,28 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenArchitec
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-4 gap-x-6 text-xs">
             {SPORT_CATEGORIES.map((cat) => (
-              <button
+              <a
                 key={cat.name}
-                onClick={() => onSelectCategory(cat.name)}
-                className="flex items-center gap-2 text-left text-stone-600 hover:text-rose-600 transition-colors py-1 group cursor-pointer"
+                href={getCategoryUrl(cat.name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Visit ${cat.name} Desk in a new tab`}
+                className="flex items-center gap-2 text-left text-stone-600 hover:text-rose-600 transition-colors py-1 group cursor-pointer no-underline"
               >
                 <span>{cat.emoji}</span>
-                <span className="font-semibold group-hover:underline">{cat.name}</span>
-              </button>
+                <span className="font-semibold group-hover:underline">{cat.name} Desk</span>
+              </a>
             ))}
-            <button
-              onClick={() => onSelectCategory('ALL')}
-              className="flex items-center gap-2 text-left text-rose-600 hover:text-rose-700 transition-colors py-1 font-bold group cursor-pointer"
+            <a
+              href={getHomeUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View all sports archives in a new tab"
+              className="flex items-center gap-2 text-left text-rose-600 hover:text-rose-700 transition-colors py-1 font-bold group cursor-pointer no-underline"
             >
               <span>🌐</span>
               <span className="underline">All Archives</span>
-            </button>
+            </a>
           </div>
         </div>
 

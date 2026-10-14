@@ -41,6 +41,13 @@ import {
   getPlayerUrl,
   getSportSlug,
 } from './utils/router';
+import {
+  applySeo,
+  getHomeSeo,
+  getCategorySeo,
+  getArticleSeo,
+  getPlayerSeo,
+} from './utils/seo';
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState<SportCategory | 'ALL'>('ALL');
@@ -77,12 +84,12 @@ export default function App() {
         setSelectedArticle(null);
         setSelectedPlayer(null);
         setActiveCategory('ALL');
-        document.title = 'SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY.';
+        applySeo(getHomeSeo());
       } else if (route.type === 'category') {
         setSelectedArticle(null);
         setSelectedPlayer(null);
         setActiveCategory(route.category);
-        document.title = `${route.category} Longform Desk & Athlete Dossiers | SPORTSPULSE`;
+        applySeo(getCategorySeo(route.category));
       } else if (route.type === 'article') {
         const art =
           ARTICLES.find((a) => a.slug === route.slug || a.id === route.slug) || null;
@@ -90,7 +97,7 @@ export default function App() {
         setSelectedPlayer(null);
         if (art) {
           setActiveCategory(art.category);
-          document.title = `${art.title} | SPORTSPULSE`;
+          applySeo(getArticleSeo(art));
         }
       } else if (route.type === 'player') {
         const p = getPlayerBySlug(route.slug);
@@ -98,7 +105,7 @@ export default function App() {
         setSelectedArticle(null);
         if (p) {
           setActiveCategory(p.sport);
-          document.title = `${p.name} - ${p.sport} Profile, Career Stats & Dossier | SPORTSPULSE`;
+          applySeo(getPlayerSeo(p));
         }
       }
     };
@@ -187,7 +194,7 @@ export default function App() {
     setSelectedArticle(art);
     setSelectedPlayer(null);
     navigateTo(getArticleUrl(art.category, art.slug));
-    document.title = `${art.title} | SPORTSPULSE`;
+    applySeo(getArticleSeo(art));
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
@@ -195,7 +202,7 @@ export default function App() {
     setSelectedPlayer(player);
     setSelectedArticle(null);
     navigateTo(getPlayerUrl(player.sport, player.slug));
-    document.title = `${player.name} - ${player.sport} Profile, Career Stats & Dossier | SPORTSPULSE`;
+    applySeo(getPlayerSeo(player));
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
@@ -205,10 +212,10 @@ export default function App() {
     setSelectedPlayer(null);
     if (cat === 'ALL') {
       navigateTo(getHomeUrl());
-      document.title = 'SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY.';
+      applySeo(getHomeSeo());
     } else {
       navigateTo(getCategoryUrl(cat));
-      document.title = `${cat} Longform Desk & Athlete Dossiers | SPORTSPULSE`;
+      applySeo(getCategorySeo(cat));
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -218,7 +225,7 @@ export default function App() {
     setSelectedPlayer(null);
     setActiveCategory('ALL');
     navigateTo(getHomeUrl());
-    document.title = 'SPORTSPULSE — EVERY SPORT. EVERY STORY. EVERY DAY.';
+    applySeo(getHomeSeo());
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

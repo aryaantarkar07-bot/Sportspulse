@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Article } from '../types';
 import { SportsArtwork } from './SportsArtwork';
+import { getArticleUrl } from '../utils/router';
 
 interface LatestStoriesProps {
   articles: Article[];
@@ -30,50 +31,73 @@ export const LatestStories: React.FC<LatestStoriesProps> = ({ articles, onSelect
 
         {/* 3-Column Image Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {displayArticles.map((article) => (
-            <article
-              key={article.id}
-              onClick={() => onSelectArticle(article)}
-              className="group cursor-pointer flex flex-col justify-between"
-            >
-              <div>
-                {/* [IMAGE] */}
-                <div className="rounded-xl overflow-hidden border border-stone-200 shadow-xs mb-4">
-                  <SportsArtwork
-                    category={article.category}
-                    title={article.title}
-                    personality={article.featuredPersonality}
-                    aspectRatio="16/9"
-                    className="w-full h-auto group-hover:scale-102 transition-transform duration-300"
-                  />
+          {displayArticles.map((article) => {
+            const articleUrl = getArticleUrl(article.category, article.slug);
+            return (
+              <article
+                key={article.id}
+                className="group flex flex-col justify-between"
+              >
+                <div>
+                  {/* [IMAGE] */}
+                  <a
+                    href={articleUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Read story: ${article.title} in a new tab`}
+                    aria-label={`Read story: ${article.title} in a new tab`}
+                    className="block rounded-xl overflow-hidden border border-stone-200 shadow-xs mb-4 cursor-pointer"
+                  >
+                    <SportsArtwork
+                      category={article.category}
+                      title={article.title}
+                      personality={article.featuredPersonality}
+                      aspectRatio="16/9"
+                      className="w-full h-auto group-hover:scale-102 transition-transform duration-300"
+                    />
+                  </a>
+
+                  {/* Category kicker */}
+                  <div className="text-[11px] font-extrabold uppercase tracking-widest text-rose-600 mb-1.5 font-sans">
+                    {article.categoryEmoji} {article.category}
+                  </div>
+
+                  {/* Headline with Semantic Link */}
+                  <h3 className="mb-2">
+                    <a
+                      href={articleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Read story: ${article.title} in a new tab`}
+                      className="font-editorial text-xl sm:text-2xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-snug text-balance no-underline block"
+                    >
+                      {article.title}
+                    </a>
+                  </h3>
+
+                  {/* Subtitle / Excerpt */}
+                  <p className="font-body text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
+                    {article.subtitle}
+                  </p>
                 </div>
 
-                {/* Category kicker */}
-                <div className="text-[11px] font-extrabold uppercase tracking-widest text-rose-600 mb-1.5 font-sans">
-                  {article.categoryEmoji} {article.category}
+                {/* Byline & read time with explicit anchor text */}
+                <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-mono text-stone-400">
+                  <span>By {article.author}</span>
+                  <a
+                    href={articleUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Read Story: ${article.title} in a new tab`}
+                    className="text-stone-900 group-hover:text-rose-600 font-semibold no-underline flex items-center gap-1"
+                  >
+                    <span>Read Story</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
                 </div>
-
-                {/* Headline */}
-                <h3 className="font-editorial text-xl sm:text-2xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-snug mb-2 text-balance">
-                  {article.title}
-                </h3>
-
-                {/* Subtitle / Excerpt */}
-                <p className="font-body text-sm text-stone-600 line-clamp-3 leading-relaxed mb-4">
-                  {article.subtitle}
-                </p>
-              </div>
-
-              {/* Byline & read time */}
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-mono text-stone-400">
-                <span>By {article.author}</span>
-                <span className="flex items-center gap-1 text-stone-500 font-medium">
-                  <Clock className="w-3 h-3 text-stone-400" />
-                  <span>{article.readTime}</span>
-                </span>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

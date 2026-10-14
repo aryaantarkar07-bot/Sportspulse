@@ -3,6 +3,7 @@ import { Search, X, Clock, ArrowRight, User, FileText } from 'lucide-react';
 import { Article, PlayerData, SportCategory } from '../types';
 import { SPORT_CATEGORIES } from '../data/sportsData';
 import { PLAYERS } from '../data/playersData';
+import { getArticleUrl, getPlayerUrl } from '../utils/router';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -194,48 +195,55 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 <span>ATHLETE DOSSIERS ({filteredPlayers.length})</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-                {filteredPlayers.slice(0, 6).map((player) => (
-                  <div
-                    key={player.id}
-                    onClick={() => {
-                      if (onSelectPlayer) {
-                        onSelectPlayer(player);
-                        onClose();
-                      }
-                    }}
-                    className="p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 transition-all cursor-pointer flex items-center gap-3 group"
-                  >
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200 relative">
-                      <img
-                        src={player.imageUrl}
-                        alt={player.name}
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = 'none';
-                        }}
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
-                      />
-                      {player.jerseyNumber && (
-                        <span className="absolute bottom-0 right-0 px-1 py-0.2 bg-stone-900 text-white text-[9px] font-mono font-bold rounded-tl">
-                          #{player.jerseyNumber}
-                        </span>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-stone-900 group-hover:text-rose-600 transition-colors truncate">
-                          {player.name}
-                        </span>
+                {filteredPlayers.slice(0, 6).map((player) => {
+                  const playerUrl = getPlayerUrl(player.sport, player.slug);
+                  return (
+                    <a
+                      key={player.id}
+                      href={playerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => onClose()}
+                      title={`Open ${player.name} Dossier in a new tab`}
+                      aria-label={`Open ${player.name} ${player.sport} dossier in a new tab`}
+                      className="p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 transition-all cursor-pointer flex items-center gap-3 group no-underline block"
+                    >
+                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200 relative">
+                        <img
+                          src={player.imageUrl}
+                          alt={`Portrait of ${player.name}, ${player.role}`}
+                          loading="lazy"
+                          decoding="async"
+                          width="48"
+                          height="48"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
+                        />
+                        {player.jerseyNumber && (
+                          <span className="absolute bottom-0 right-0 px-1 py-0.2 bg-stone-900 text-white text-[9px] font-mono font-bold rounded-tl">
+                            #{player.jerseyNumber}
+                          </span>
+                        )}
                       </div>
-                      <div className="text-[11px] text-stone-500 truncate">
-                        {player.sport} · {player.role}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-stone-900 group-hover:text-rose-600 transition-colors truncate">
+                            {player.name}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-stone-500 truncate">
+                          {player.sport} · {player.role}
+                        </div>
+                        <div className="text-[10px] font-mono text-stone-400 truncate">
+                          {player.team}
+                        </div>
                       </div>
-                      <div className="text-[10px] font-mono text-stone-400 truncate">
-                        {player.team}
-                      </div>
-                    </div>
-                    <ArrowRight className="w-3.5 h-3.5 text-stone-300 group-hover:text-rose-600 group-hover:translate-x-0.5 transition-all shrink-0" />
-                  </div>
-                ))}
+                      <ArrowRight className="w-3.5 h-3.5 text-stone-300 group-hover:text-rose-600 group-hover:translate-x-0.5 transition-all shrink-0" />
+                    </a>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -250,35 +258,42 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 </div>
               )}
               <div className="divide-y divide-stone-100">
-                {filteredArticles.map((art) => (
-                  <div
-                    key={art.id}
-                    onClick={() => {
-                      onSelectArticle(art);
-                      onClose();
-                    }}
-                    className="py-3 px-3 rounded-lg hover:bg-stone-50 transition-colors group cursor-pointer flex items-center justify-between gap-4"
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-rose-600 font-sans">
-                          {art.category}
-                        </span>
-                        <span aria-hidden="true" className="text-stone-300">·</span>
-                        <span className="text-[11px] font-mono text-stone-400">
-                          {art.readTime}
-                        </span>
+                {filteredArticles.map((art) => {
+                  const artUrl = getArticleUrl(art.category, art.slug);
+                  return (
+                    <a
+                      key={art.id}
+                      href={artUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => onClose()}
+                      title={`Read ${art.title} in a new tab`}
+                      className="py-3 px-3 rounded-lg hover:bg-stone-50 transition-colors group cursor-pointer flex items-center justify-between gap-4 no-underline block"
+                    >
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[11px] font-extrabold uppercase tracking-wider text-rose-600 font-sans">
+                            {art.category}
+                          </span>
+                          <span aria-hidden="true" className="text-stone-300">·</span>
+                          <span className="text-[11px] font-mono text-stone-400">
+                            {art.readTime}
+                          </span>
+                        </div>
+                        <h4 className="font-editorial text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors truncate">
+                          {art.title}
+                        </h4>
+                        <p className="text-xs text-stone-500 truncate font-sans">
+                          By {art.author} · {art.subtitle}
+                        </p>
                       </div>
-                      <h4 className="font-editorial text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors truncate">
-                        {art.title}
-                      </h4>
-                      <p className="text-xs text-stone-500 truncate font-sans">
-                        By {art.author} · {art.subtitle}
-                      </p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-stone-300 group-hover:text-rose-600 group-hover:translate-x-1 transition-all shrink-0" />
-                  </div>
-                ))}
+                      <span className="text-rose-600 text-xs font-semibold shrink-0 flex items-center gap-1">
+                        <span>Read</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </a>
+                  );
+                })}
               </div>
             </div>
           )}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, Bookmark, Menu, X, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import { SportCategory } from '../types';
 import { SPORT_CATEGORIES } from '../data/sportsData';
+import { getHomeUrl, getCategoryUrl } from '../utils/router';
 
 interface HeaderProps {
   activeCategory: SportCategory | 'ALL';
@@ -39,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-4">
             <button
               onClick={onOpenArchitectureModal}
-              className="text-stone-600 hover:text-stone-900 transition-colors hidden md:flex items-center gap-1.5"
+              className="text-stone-600 hover:text-stone-900 transition-colors hidden md:flex items-center gap-1.5 cursor-pointer"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               <span>Publishing Architecture: Static v1 / API v2</span>
@@ -52,16 +53,22 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Main Masthead: 3-Zone Contract */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-        {/* Zone 1: Brand Wordmark */}
+        {/* Zone 1: Brand Wordmark with Semantic Link */}
         <div className="flex items-baseline gap-3">
-          <button
-            onClick={onNavigateHome}
-            className="text-left group cursor-pointer"
+          <a
+            href={getHomeUrl()}
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigateHome();
+            }}
+            title="SPORTSPULSE Homepage"
+            aria-label="SPORTSPULSE Homepage"
+            className="text-left group cursor-pointer no-underline block"
           >
             <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tighter font-sans uppercase text-stone-900 group-hover:text-rose-600 transition-colors">
               SPORTSPULSE
             </span>
-          </button>
+          </a>
           <span className="hidden lg:inline text-[11px] font-mono tracking-widest text-stone-400 uppercase">
             EVERY SPORT. EVERY STORY. EVERY DAY.
           </span>
@@ -69,36 +76,22 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Zone 2: Editorial Navigation Links (Desktop) */}
         <nav className="hidden xl:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-stone-600">
-          <button
-            onClick={() => onSelectCategory('Cricket')}
-            className={`hover:text-rose-600 transition-colors ${activeCategory === 'Cricket' ? 'text-rose-600 font-bold' : ''}`}
-          >
-            Cricket
-          </button>
-          <button
-            onClick={() => onSelectCategory('Football')}
-            className={`hover:text-rose-600 transition-colors ${activeCategory === 'Football' ? 'text-rose-600 font-bold' : ''}`}
-          >
-            Football
-          </button>
-          <button
-            onClick={() => onSelectCategory('Kabaddi')}
-            className={`hover:text-rose-600 transition-colors ${activeCategory === 'Kabaddi' ? 'text-rose-600 font-bold' : ''}`}
-          >
-            Kabaddi
-          </button>
-          <button
-            onClick={() => onSelectCategory('Hockey')}
-            className={`hover:text-rose-600 transition-colors ${activeCategory === 'Hockey' ? 'text-rose-600 font-bold' : ''}`}
-          >
-            Hockey
-          </button>
-          <button
-            onClick={() => onSelectCategory('Tennis')}
-            className={`hover:text-rose-600 transition-colors ${activeCategory === 'Tennis' ? 'text-rose-600 font-bold' : ''}`}
-          >
-            Tennis
-          </button>
+          {(['Cricket', 'Football', 'Kabaddi', 'Hockey', 'Tennis'] as SportCategory[]).map((catName) => (
+            <a
+              key={catName}
+              href={getCategoryUrl(catName)}
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectCategory(catName);
+              }}
+              title={`Explore ${catName} stories`}
+              className={`hover:text-rose-600 transition-colors no-underline ${
+                activeCategory === catName ? 'text-rose-600 font-bold' : ''
+              }`}
+            >
+              {catName} Desk
+            </a>
+          ))}
         </nav>
 
         {/* Zone 3: Primary Actions */}
@@ -106,8 +99,8 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Search Action */}
           <button
             onClick={onOpenSearch}
-            className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200/80 rounded-md transition-colors"
-            aria-label="Search stories"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200/80 rounded-md transition-colors cursor-pointer"
+            aria-label="Search articles and players"
           >
             <Search className="w-3.5 h-3.5 text-stone-600" />
             <span className="hidden sm:inline">SEARCH</span>
@@ -117,9 +110,9 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Bookmarks Action */}
           <button
             onClick={onOpenBookmarks}
-            className="relative p-2 text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-md transition-colors"
+            className="relative p-2 text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-md transition-colors cursor-pointer"
             title="Saved Reading List"
-            aria-label="Saved stories"
+            aria-label="Saved reading list stories"
           >
             <Bookmark className="w-4 h-4" />
             {savedCount > 0 && (
@@ -132,8 +125,8 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Menu Action */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-stone-900 border border-stone-300 hover:border-stone-400 rounded-md transition-colors"
-            aria-label="Open navigation menu"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-stone-900 border border-stone-300 hover:border-stone-400 rounded-md transition-colors cursor-pointer"
+            aria-label="Open sports directory menu"
           >
             {menuOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
             <span className="hidden sm:inline">MENU</span>
@@ -145,22 +138,30 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="border-t border-stone-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center gap-1 overflow-x-auto py-2.5 scrollbar-none text-xs font-bold tracking-wider uppercase text-stone-600 whitespace-nowrap">
-            <button
-              onClick={() => onSelectCategory('ALL')}
-              className={`px-3 py-1 rounded transition-colors ${
+            <a
+              href={getHomeUrl()}
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectCategory('ALL');
+              }}
+              title="All Sports Stories"
+              className={`px-3 py-1 rounded transition-colors no-underline ${
                 activeCategory === 'ALL'
                   ? 'bg-stone-900 text-white'
                   : 'hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
               All Stories
-            </button>
+            </a>
             <span className="text-stone-300 px-1" aria-hidden="true">|</span>
             {SPORT_CATEGORIES.map((cat) => (
-              <button
+              <a
                 key={cat.name}
-                onClick={() => onSelectCategory(cat.name)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors ${
+                href={getCategoryUrl(cat.name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Explore ${cat.name} desk in a new tab`}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors no-underline ${
                   activeCategory === cat.name
                     ? 'bg-rose-600 text-white'
                     : 'hover:text-stone-900 hover:bg-stone-100'
@@ -168,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <span>{cat.emoji}</span>
                 <span>{cat.name}</span>
-              </button>
+              </a>
             ))}
           </div>
         </div>
@@ -188,7 +189,8 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
                 <button
                   onClick={() => setMenuOpen(false)}
-                  className="p-1 rounded text-stone-400 hover:text-stone-900"
+                  className="p-1 rounded text-stone-400 hover:text-stone-900 cursor-pointer"
+                  aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -200,20 +202,21 @@ export const Header: React.FC<HeaderProps> = ({
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
                   {SPORT_CATEGORIES.map((cat) => (
-                    <button
+                    <a
                       key={cat.name}
-                      onClick={() => {
-                        onSelectCategory(cat.name);
-                        setMenuOpen(false);
-                      }}
-                      className="flex items-center justify-between p-2.5 text-left rounded-lg border border-stone-100 hover:border-stone-300 hover:bg-stone-50 transition-all text-sm text-stone-800"
+                      href={getCategoryUrl(cat.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMenuOpen(false)}
+                      title={`Visit ${cat.name} Desk in a new tab`}
+                      className="flex items-center justify-between p-2.5 text-left rounded-lg border border-stone-100 hover:border-stone-300 hover:bg-stone-50 transition-all text-sm text-stone-800 no-underline"
                     >
                       <span className="flex items-center gap-2">
                         <span>{cat.emoji}</span>
                         <span className="font-medium">{cat.name}</span>
                       </span>
                       <span className="text-[11px] font-mono text-stone-400">{cat.count}</span>
-                    </button>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -235,7 +238,7 @@ export const Header: React.FC<HeaderProps> = ({
                   onOpenArchitectureModal();
                   setMenuOpen(false);
                 }}
-                className="w-full flex items-center justify-between p-3 bg-stone-900 text-white rounded-lg text-xs font-semibold hover:bg-stone-800 transition-colors"
+                className="w-full flex items-center justify-between p-3 bg-stone-900 text-white rounded-lg text-xs font-semibold hover:bg-stone-800 transition-colors cursor-pointer"
               >
                 <span>Read About Publishing Architecture (Static vs API)</span>
                 <ArrowRight className="w-4 h-4" />

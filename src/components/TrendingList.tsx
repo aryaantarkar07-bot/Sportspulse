@@ -1,6 +1,7 @@
 import React from 'react';
 import { Flame, Clock, ArrowRight } from 'lucide-react';
 import { Article } from '../types';
+import { getArticleUrl } from '../utils/router';
 
 interface TrendingListProps {
   articles: Article[];
@@ -26,11 +27,11 @@ export const TrendingList: React.FC<TrendingListProps> = ({ articles, onSelectAr
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {articles.map((article, idx) => {
             const rank = String(idx + 1).padStart(2, '0');
+            const articleUrl = getArticleUrl(article.category, article.slug);
             return (
               <div
                 key={article.id}
-                onClick={() => onSelectArticle(article)}
-                className="group cursor-pointer p-6 rounded-2xl border border-stone-200 hover:border-stone-400 hover:shadow-sm bg-white transition-all flex flex-col justify-between"
+                className="group p-6 rounded-2xl border border-stone-200 hover:border-stone-400 hover:shadow-sm bg-white transition-all flex flex-col justify-between"
               >
                 <div>
                   {/* Top: Editorial Number + Category */}
@@ -43,9 +44,17 @@ export const TrendingList: React.FC<TrendingListProps> = ({ articles, onSelectAr
                     </span>
                   </div>
 
-                  {/* Headline */}
-                  <h3 className="font-editorial text-xl sm:text-2xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-snug mb-3">
-                    {article.title}
+                  {/* Headline with Semantic Link */}
+                  <h3 className="mb-3">
+                    <a
+                      href={articleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Read story: ${article.title} in a new tab`}
+                      className="font-editorial text-xl sm:text-2xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-snug no-underline block"
+                    >
+                      {article.title}
+                    </a>
                   </h3>
 
                   {/* Subtitle */}
@@ -54,13 +63,19 @@ export const TrendingList: React.FC<TrendingListProps> = ({ articles, onSelectAr
                   </p>
                 </div>
 
-                {/* Footer metadata */}
+                {/* Footer metadata with explicit anchor link */}
                 <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-mono text-stone-400">
                   <span className="text-stone-500 font-medium">By {article.author}</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-stone-400" />
-                    <span>{article.readTime}</span>
-                  </span>
+                  <a
+                    href={articleUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Read Dispatch: ${article.title} in a new tab`}
+                    className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform no-underline flex items-center gap-1"
+                  >
+                    <span>Read Dispatch</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
                 </div>
               </div>
             );

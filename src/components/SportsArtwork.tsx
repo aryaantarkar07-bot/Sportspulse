@@ -14,6 +14,7 @@ interface SportsArtworkProps {
   className?: string;
   aspectRatio?: '16/9' | '4/3' | '3/2' | '21/9' | '1/1';
   priority?: boolean;
+  alt?: string;
 }
 
 export const SportsArtwork: React.FC<SportsArtworkProps> = ({
@@ -25,7 +26,16 @@ export const SportsArtwork: React.FC<SportsArtworkProps> = ({
   event,
   className = '',
   aspectRatio = '16/9',
+  alt,
 }) => {
+  // Descriptive alt text for SEO and accessibility
+  const computedAlt =
+    alt ||
+    (personality
+      ? `Official portrait of ${personality.name}, ${personality.honors || 'sports star'} representing ${personality.country} in ${category}`
+      : event
+      ? `Event documentation of ${event.name} held at ${event.venue}, ${event.location} (${event.tournament})`
+      : `${figureNumber ? `${figureNumber}: ` : ''}${title} - ${category} sports editorial artwork`);
   // Bespoke palettes and geometry per sport
   const getTheme = () => {
     switch (category) {
@@ -186,6 +196,8 @@ export const SportsArtwork: React.FC<SportsArtworkProps> = ({
 
   return (
     <div
+      role="img"
+      aria-label={computedAlt}
       className={`relative overflow-hidden bg-gradient-to-br ${theme.gradient} text-white select-none ${className}`}
       style={{ aspectRatio }}
     >

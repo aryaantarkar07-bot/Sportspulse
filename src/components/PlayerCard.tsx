@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PlayerData } from '../types';
 import { Shield, Sparkles, Trophy, Quote, X } from 'lucide-react';
+import { getPlayerUrl } from '../utils/router';
 
 interface PlayerCardProps {
   player: PlayerData;
@@ -23,6 +24,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
       setModalOpen(true);
     }
   };
+
+  const profileUrl = getPlayerUrl(player.sport, player.slug);
 
   // Fallback athlete silhouette graphic
   const renderFallbackAvatar = () => (
@@ -63,15 +66,23 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
 
   if (variant === 'compact') {
     return (
-      <div
-        onClick={handleClick}
-        className="group cursor-pointer flex items-center gap-3 p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 transition-all shadow-2xs"
+      <a
+        href={profileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={`View ${player.name} profile in a new tab`}
+        aria-label={`View ${player.name} ${player.sport} profile dossier in a new tab`}
+        className="group cursor-pointer flex items-center gap-3 p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 transition-all shadow-2xs no-underline"
       >
         <div className="w-12 h-12 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200 relative">
           {!imgError && player.imageUrl ? (
             <img
               src={player.imageUrl}
-              alt={player.name}
+              alt={`Portrait of ${player.name}, ${player.role} for ${player.team}`}
+              loading="lazy"
+              decoding="async"
+              width="48"
+              height="48"
               referrerPolicy="no-referrer"
               onError={() => setImgError(true)}
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
@@ -93,15 +104,19 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
           </div>
           <div className="text-[11px] text-stone-500 truncate">{player.role}</div>
         </div>
-      </div>
+      </a>
     );
   }
 
   return (
     <>
-      <div
-        onClick={handleClick}
-        className="group cursor-pointer bg-white rounded-2xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-md transition-all flex flex-col justify-between"
+      <a
+        href={profileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={`Explore ${player.name} ${player.sport} Dossier in a new tab`}
+        aria-label={`Explore ${player.name} ${player.sport} Dossier, Career Statistics & Scouting Report in a new tab`}
+        className="group cursor-pointer bg-white rounded-2xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-md transition-all flex flex-col justify-between no-underline block"
       >
         <div>
           {/* Player Photo Container */}
@@ -109,7 +124,11 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
             {!imgError && player.imageUrl ? (
               <img
                 src={player.imageUrl}
-                alt={player.name}
+                alt={`Action portrait of ${player.name}, ${player.role} for ${player.team}`}
+                loading="lazy"
+                decoding="async"
+                width="280"
+                height="350"
                 referrerPolicy="no-referrer"
                 onError={() => setImgError(true)}
                 className="w-full h-full object-cover object-top group-hover:scale-103 transition-transform duration-500"
@@ -165,14 +184,15 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
           </div>
         </div>
 
-        {/* Footer Action */}
+        {/* Footer Action with Anchor Text */}
         <div className="px-4 sm:px-5 pb-4 pt-1 flex items-center justify-between text-xs font-mono text-stone-400">
           <span className="text-[10px] uppercase">{player.sport} Star</span>
-          <span className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform">
-            View Profile →
+          <span className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+            <span>Explore {player.name} Profile</span>
+            <span aria-hidden="true">→</span>
           </span>
         </div>
-      </div>
+      </a>
 
       {/* Expanded Player Dossier Modal */}
       {modalOpen && (
@@ -182,7 +202,9 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
               {!imgError && player.imageUrl ? (
                 <img
                   src={player.imageUrl}
-                  alt={player.name}
+                  alt={`High-resolution portrait of ${player.name}, ${player.sport} athlete for ${player.team}`}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-top"
                 />

@@ -66,12 +66,15 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
               <span>Back</span>
             </button>
             <span>/</span>
-            <span
-              onClick={() => navigateTo(`/${getSportSlug(player.sport)}`)}
+            <a
+              href={`/${getSportSlug(player.sport)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-rose-600 cursor-pointer uppercase transition-colors"
+              title={`View ${player.sport} desk in a new tab`}
             >
-              {player.sport}
-            </span>
+              {player.sport} Desk
+            </a>
             <span>/</span>
             <span className="text-stone-900 font-bold uppercase truncate max-w-[200px]">
               {player.name}
@@ -116,7 +119,11 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                 {!imgError ? (
                   <img
                     src={player.imageUrl}
-                    alt={player.name}
+                    alt={`High-definition action portrait of ${player.name}, ${player.role} for ${player.team}`}
+                    loading="lazy"
+                    decoding="async"
+                    width="240"
+                    height="240"
                     onError={() => setImgError(true)}
                     className="w-full h-full object-cover object-top filter contrast-105 group-hover:scale-105 transition-transform duration-500"
                   />
@@ -610,10 +617,13 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                   {relatedArticles.length > 0 ? (
                     <div className="space-y-3">
                       {relatedArticles.map((art) => (
-                        <div
+                        <a
                           key={art.id}
-                          onClick={() => onSelectArticle(art)}
-                          className="group cursor-pointer p-4 rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-xs transition-all flex items-start justify-between gap-4"
+                          href={getArticleUrl(art.category, art.slug)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={`Read story: ${art.title} in a new tab`}
+                          className="group cursor-pointer p-4 rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-xs transition-all flex items-start justify-between gap-4 no-underline bg-white block"
                         >
                           <div>
                             <div className="text-[10px] font-mono uppercase text-rose-600 font-bold mb-1">
@@ -626,10 +636,11 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                               {art.subtitle}
                             </p>
                           </div>
-                          <span className="text-rose-600 text-xs font-mono font-bold shrink-0 self-center">
-                            Read →
+                          <span className="text-rose-600 text-xs font-mono font-bold shrink-0 self-center flex items-center gap-1">
+                            <span>Read Story</span>
+                            <span aria-hidden="true">→</span>
                           </span>
-                        </div>
+                        </a>
                       ))}
                     </div>
                   ) : (
@@ -655,26 +666,37 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                   Other {player.sport} Stars To Explore
                 </h3>
               </div>
-              <button
-                onClick={() => navigateTo(`/${getSportSlug(player.sport)}`)}
-                className="text-xs font-mono font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1"
+              <a
+                href={`/${getSportSlug(player.sport)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Full ${player.sport} Desk in a new tab`}
+                className="text-xs font-mono font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 no-underline"
               >
                 <span>Full {player.sport} Desk</span>
                 <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {peerPlayers.map((peer) => (
-                <div
+                <a
                   key={peer.id}
-                  onClick={() => onSelectPlayer(peer)}
-                  className="group cursor-pointer bg-white rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-md transition-all p-3 text-center flex flex-col justify-between"
+                  href={getPlayerUrl(peer.sport, peer.slug)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`View ${peer.name} Dossier in a new tab`}
+                  aria-label={`View ${peer.name} ${peer.sport} dossier in a new tab`}
+                  className="group cursor-pointer bg-white rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-md transition-all p-3 text-center flex flex-col justify-between no-underline block"
                 >
                   <div className="aspect-square rounded-lg overflow-hidden bg-stone-100 mb-2.5 relative">
                     <img
                       src={peer.imageUrl}
-                      alt={peer.name}
+                      alt={`Photo of ${peer.name}, ${peer.role} in ${peer.sport}`}
+                      loading="lazy"
+                      decoding="async"
+                      width="120"
+                      height="120"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = 'none';
                       }}
@@ -694,10 +716,11 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                       {peer.role}
                     </p>
                   </div>
-                  <div className="mt-2 pt-2 border-t border-stone-100 text-[10px] font-mono text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform">
-                    View Dossier →
+                  <div className="mt-2 pt-2 border-t border-stone-100 text-[10px] font-mono text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center justify-center gap-1">
+                    <span>View Dossier</span>
+                    <span aria-hidden="true">→</span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>

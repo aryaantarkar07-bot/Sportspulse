@@ -19,7 +19,7 @@ import {
 import { Article, SupportingImage, FamousPersonality, SportEvent } from '../types';
 import { ARTICLES } from '../data/sportsData';
 import { SportsArtwork, ArtworkVariant } from './SportsArtwork';
-import { getArticleUrl } from '../utils/router';
+import { getArticleUrl, getSportSlug } from '../utils/router';
 
 interface ArticleViewProps {
   article: Article;
@@ -132,13 +132,18 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
       {/* Article Sticky Action Navigation */}
       <div className="sticky top-[108px] z-30 bg-white/95 backdrop-blur-md border-b border-stone-200 py-2.5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors uppercase tracking-wider cursor-pointer"
+          <a
+            href={`/${getSportSlug(article.category)}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onBack();
+            }}
+            title={`Back to ${article.category} desk`}
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-stone-900 transition-colors uppercase tracking-wider cursor-pointer no-underline"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Stories</span>
-          </button>
+            <span>Back to {article.category} Stories</span>
+          </a>
 
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Audio Listen Dispatch */}
@@ -432,9 +437,17 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                       {sec.heading}
                     </h3>
                   ) : (
-                    <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-stone-900 tracking-tight leading-tight">
-                      {sec.heading}
-                    </h2>
+                    <div>
+                      <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-stone-900 tracking-tight leading-tight">
+                        {sec.heading}
+                      </h2>
+                      {sec.heading.includes('?') && (
+                        <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-mono uppercase tracking-widest font-bold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+                          <span>AEO Direct Answer Analysis</span>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
@@ -445,6 +458,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   key={paraIdx}
                   className={`font-body text-stone-800 ${getFontSizeClasses()} ${
                     secIdx === 0 && paraIdx === 0 ? 'editorial-drop-cap' : ''
+                  } ${
+                    paraIdx === 0 && sec.heading?.includes('?')
+                      ? 'text-stone-950 font-medium bg-stone-50/60 p-4 rounded-xl border border-stone-200/70'
+                      : ''
                   }`}
                 >
                   {para}
@@ -737,51 +754,61 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                 MORE FROM {article.category}
               </h2>
             </div>
-            <button
-              onClick={onBack}
-              className="text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
+            <a
+              href={`/${getSportSlug(article.category)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer no-underline"
+              title={`View all ${article.category} features in a new tab`}
             >
-              <span>View All</span>
+              <span>View All {article.category} Stories</span>
               <ChevronRight className="w-4 h-4" />
-            </button>
+            </a>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {displayRelated.map((rel) => (
-              <div
-                key={rel.id}
-                onClick={() => onSelectArticle(rel)}
-                className="group cursor-pointer bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-md transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="aspect-[16/10] overflow-hidden">
-                    <SportsArtwork
-                      category={rel.category}
-                      title={rel.title}
-                      aspectRatio="16/9"
-                      className="w-full h-full group-hover:scale-102 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <div className="text-[11px] font-extrabold uppercase tracking-wider text-rose-600 mb-1.5 font-sans">
-                      {rel.category}
+            {displayRelated.map((rel) => {
+              const relUrl = getArticleUrl(rel.category, rel.slug);
+              return (
+                <a
+                  key={rel.id}
+                  href={relUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Read story: ${rel.title} in a new tab`}
+                  className="group cursor-pointer bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-md transition-all flex flex-col justify-between no-underline block"
+                >
+                  <div>
+                    <div className="aspect-[16/10] overflow-hidden">
+                      <SportsArtwork
+                        category={rel.category}
+                        title={rel.title}
+                        aspectRatio="16/9"
+                        className="w-full h-full group-hover:scale-102 transition-transform duration-300"
+                      />
                     </div>
-                    <h3 className="font-editorial text-lg font-bold text-stone-900 group-hover:text-rose-600 transition-colors leading-snug line-clamp-2 mb-2">
-                      {rel.title}
-                    </h3>
-                    <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
-                      {rel.subtitle}
-                    </p>
+                    <div className="p-5">
+                      <div className="text-[11px] font-extrabold uppercase tracking-wider text-rose-600 mb-1.5 font-sans">
+                        {rel.category}
+                      </div>
+                      <h3 className="font-editorial text-lg font-bold text-stone-900 group-hover:text-rose-600 transition-colors leading-snug line-clamp-2 mb-2">
+                        {rel.title}
+                      </h3>
+                      <p className="font-body text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                        {rel.subtitle}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="px-5 pb-5 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                  <span>{rel.readTime}</span>
-                  <span className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform">
-                    Read →
-                  </span>
-                </div>
-              </div>
-            ))}
+                  <div className="px-5 pb-5 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-400">
+                    <span>{rel.readTime}</span>
+                    <span className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                      <span>Read Feature</span>
+                      <span aria-hidden="true">→</span>
+                    </span>
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>

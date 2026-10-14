@@ -4,6 +4,7 @@ import { Article, PlayerData, SportCategory } from '../types';
 import { SportsArtwork } from './SportsArtwork';
 import { PlayerRosterStrip } from './PlayerRosterStrip';
 import { getPlayersBySport } from '../data/playersData';
+import { getArticleUrl, getHomeUrl } from '../utils/router';
 
 interface CategoryHubProps {
   category: SportCategory;
@@ -31,13 +32,18 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Back navigation */}
         <div className="mb-6">
-          <button
-            onClick={onBackToHome}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 transition-colors"
+          <a
+            href={getHomeUrl()}
+            onClick={(e) => {
+              e.preventDefault();
+              onBackToHome();
+            }}
+            title="Return to SportsPulse Homepage"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 transition-colors no-underline"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Homepage</span>
-          </button>
+          </a>
         </div>
 
         {/* Hub Header */}
@@ -54,42 +60,63 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
         </div>
 
         {/* Lead Story */}
-        {leadArticle && (
-          <div
-            onClick={() => onSelectArticle(leadArticle)}
-            className="mb-14 group cursor-pointer border border-stone-200 rounded-2xl overflow-hidden hover:border-stone-400 hover:shadow-md transition-all grid grid-cols-1 lg:grid-cols-12"
-          >
-            <div className="lg:col-span-7">
-              <SportsArtwork
-                category={leadArticle.category}
-                title={leadArticle.title}
-                personality={leadArticle.featuredPersonality}
-                aspectRatio="16/9"
-                className="w-full h-full min-h-[320px]"
-              />
-            </div>
-            <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-stone-50/50">
-              <div>
-                <div className="text-[11px] font-mono uppercase tracking-widest text-rose-600 font-bold mb-2">
-                  COVER STORY
+        {leadArticle && (() => {
+          const leadUrl = getArticleUrl(leadArticle.category, leadArticle.slug);
+          return (
+            <div className="mb-14 border border-stone-200 rounded-2xl overflow-hidden hover:border-stone-400 hover:shadow-md transition-all grid grid-cols-1 lg:grid-cols-12 group">
+              <a
+                href={leadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Read story: ${leadArticle.title} in a new tab`}
+                className="lg:col-span-7 block cursor-pointer no-underline"
+              >
+                <SportsArtwork
+                  category={leadArticle.category}
+                  title={leadArticle.title}
+                  personality={leadArticle.featuredPersonality}
+                  aspectRatio="16/9"
+                  className="w-full h-full min-h-[320px]"
+                />
+              </a>
+              <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-stone-50/50">
+                <div>
+                  <div className="text-[11px] font-mono uppercase tracking-widest text-rose-600 font-bold mb-2">
+                    COVER STORY
+                  </div>
+                  <h2 className="mb-3">
+                    <a
+                      href={leadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Read story: ${leadArticle.title} in a new tab`}
+                      className="font-editorial text-2xl sm:text-3xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight no-underline block"
+                    >
+                      {leadArticle.title}
+                    </a>
+                  </h2>
+                  <p className="font-body text-sm sm:text-base text-stone-600 leading-relaxed mb-6">
+                    {leadArticle.subtitle}
+                  </p>
                 </div>
-                <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight mb-3">
-                  {leadArticle.title}
-                </h2>
-                <p className="font-body text-sm sm:text-base text-stone-600 leading-relaxed mb-6">
-                  {leadArticle.subtitle}
-                </p>
-              </div>
 
-              <div className="pt-4 border-t border-stone-200/80 flex items-center justify-between text-xs font-mono text-stone-500">
-                <span>By {leadArticle.author} · {leadArticle.readTime}</span>
-                <span className="text-rose-600 font-bold group-hover:translate-x-1 transition-transform">
-                  Read Feature →
-                </span>
+                <div className="pt-4 border-t border-stone-200/80 flex items-center justify-between text-xs font-mono text-stone-500">
+                  <span>By {leadArticle.author} · {leadArticle.readTime}</span>
+                  <a
+                    href={leadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Read Feature: ${leadArticle.title} in a new tab`}
+                    className="text-rose-600 font-bold group-hover:translate-x-1 transition-transform no-underline flex items-center gap-1"
+                  >
+                    <span>Read Feature</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Other Stories in Hub */}
         {otherArticles.length > 0 ? (
@@ -98,41 +125,64 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
               ADDITIONAL ESSAYS & INVESTIGATIONS
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherArticles.map((art) => (
-                <div
-                  key={art.id}
-                  onClick={() => onSelectArticle(art)}
-                  className="group cursor-pointer bg-white rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-sm transition-all overflow-hidden flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="aspect-[16/10] overflow-hidden">
-                      <SportsArtwork
-                        category={art.category}
-                        title={art.title}
-                        aspectRatio="16/9"
-                        className="w-full h-full group-hover:scale-102 transition-transform"
-                      />
-                    </div>
-                    <div className="p-5">
-                      <div className="text-[10px] font-mono uppercase text-stone-400 mb-1">
-                        {art.date} · {art.readTime}
+              {otherArticles.map((art) => {
+                const artUrl = getArticleUrl(art.category, art.slug);
+                return (
+                  <div
+                    key={art.id}
+                    className="group bg-white rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-sm transition-all overflow-hidden flex flex-col justify-between"
+                  >
+                    <div>
+                      <a
+                        href={artUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`Read story: ${art.title} in a new tab`}
+                        className="aspect-[16/10] overflow-hidden block cursor-pointer no-underline"
+                      >
+                        <SportsArtwork
+                          category={art.category}
+                          title={art.title}
+                          aspectRatio="16/9"
+                          className="w-full h-full group-hover:scale-102 transition-transform"
+                        />
+                      </a>
+                      <div className="p-5">
+                        <div className="text-[10px] font-mono uppercase text-stone-400 mb-1">
+                          {art.date} · {art.readTime}
+                        </div>
+                        <h4 className="mb-2">
+                          <a
+                            href={artUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={`Read story: ${art.title} in a new tab`}
+                            className="font-editorial text-lg sm:text-xl font-bold text-stone-900 group-hover:text-rose-600 transition-colors leading-snug no-underline block"
+                          >
+                            {art.title}
+                          </a>
+                        </h4>
+                        <p className="font-body text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                          {art.subtitle}
+                        </p>
                       </div>
-                      <h4 className="font-editorial text-lg sm:text-xl font-bold text-stone-900 group-hover:text-rose-600 transition-colors leading-snug mb-2">
-                        {art.title}
-                      </h4>
-                      <p className="font-body text-xs text-stone-600 line-clamp-2 leading-relaxed">
-                        {art.subtitle}
-                      </p>
+                    </div>
+                    <div className="px-5 pb-4 pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-400">
+                      <span>By {art.author}</span>
+                      <a
+                        href={artUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`Read Story: ${art.title} in a new tab`}
+                        className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform no-underline flex items-center gap-1"
+                      >
+                        <span>Read Story</span>
+                        <span aria-hidden="true">→</span>
+                      </a>
                     </div>
                   </div>
-                  <div className="px-5 pb-4 pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                    <span>By {art.author}</span>
-                    <span className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform">
-                      Read →
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         ) : (

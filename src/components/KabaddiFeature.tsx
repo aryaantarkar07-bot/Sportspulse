@@ -4,6 +4,7 @@ import { Article, PlayerData } from '../types';
 import { SportsArtwork } from './SportsArtwork';
 import { PlayerRosterStrip } from './PlayerRosterStrip';
 import { getPlayersBySport } from '../data/playersData';
+import { getArticleUrl } from '../utils/router';
 
 interface KabaddiFeatureProps {
   article: Article;
@@ -18,6 +19,7 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const kabaddiPlayers = getPlayersBySport('Kabaddi');
+  const articleUrl = getArticleUrl(article.category, article.slug);
 
   return (
     <section className="py-14 border-b border-stone-200 bg-stone-50/60">
@@ -40,10 +42,7 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
         {/* 3-Part Showcase Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Part 1: Main Story Deck (5 cols) */}
-          <div
-            onClick={() => onSelectArticle(article)}
-            className="lg:col-span-5 group cursor-pointer flex flex-col justify-between h-full bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-xs hover:border-stone-400 hover:shadow-md transition-all"
-          >
+          <div className="lg:col-span-5 flex flex-col justify-between h-full bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-xs hover:border-stone-400 hover:shadow-md transition-all group">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-2 py-0.5 bg-amber-500 text-stone-950 text-[10px] font-mono font-bold rounded uppercase">
@@ -54,8 +53,16 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
                 </span>
               </div>
 
-              <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight mb-4">
-                {article.title}
+              <h3 className="mb-4">
+                <a
+                  href={articleUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Read story: ${article.title} in a new tab`}
+                  className="font-editorial text-2xl sm:text-3xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight no-underline block"
+                >
+                  {article.title}
+                </a>
               </h3>
 
               <p className="font-body text-sm sm:text-base text-stone-600 leading-relaxed mb-6">
@@ -81,9 +88,16 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
 
             <div className="pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-mono">
               <span className="text-stone-500">By {article.author} · {article.readTime}</span>
-              <span className="text-rose-600 font-bold group-hover:translate-x-1 transition-transform">
-                Read Article →
-              </span>
+              <a
+                href={articleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Read Kabaddi Investigation: ${article.title} in a new tab`}
+                className="text-rose-600 font-bold group-hover:translate-x-1 transition-transform no-underline flex items-center gap-1"
+              >
+                <span>Read Kabaddi Investigation</span>
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
 
@@ -138,9 +152,14 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
 
             {/* Supporting Images Gallery Row */}
             <div className="grid grid-cols-2 gap-4">
-              <div
-                onClick={() => onSelectArticle(article)}
-                className="group cursor-pointer bg-white p-3 rounded-xl border border-stone-200 hover:border-stone-400 transition-all shadow-2xs"
+              <a
+                href={articleUrl}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSelectArticle(article);
+                }}
+                title="View Pro Kabaddi S12 Finale Analysis"
+                className="group cursor-pointer bg-white p-3 rounded-xl border border-stone-200 hover:border-stone-400 transition-all shadow-2xs no-underline block"
               >
                 <div className="aspect-[16/10] rounded-lg overflow-hidden mb-2">
                   <SportsArtwork
@@ -157,11 +176,16 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
                 <div className="font-editorial text-xs sm:text-sm font-bold text-stone-900 group-hover:text-rose-600 transition-colors line-clamp-1">
                   Corner & In-Cover Locking Angles
                 </div>
-              </div>
+              </a>
 
-              <div
-                onClick={() => onSelectArticle(article)}
-                className="group cursor-pointer bg-white p-3 rounded-xl border border-stone-200 hover:border-stone-400 transition-all shadow-2xs"
+              <a
+                href={articleUrl}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSelectArticle(article);
+                }}
+                title="View Asian Games Final Analysis"
+                className="group cursor-pointer bg-white p-3 rounded-xl border border-stone-200 hover:border-stone-400 transition-all shadow-2xs no-underline block"
               >
                 <div className="aspect-[16/10] rounded-lg overflow-hidden mb-2">
                   <SportsArtwork
@@ -178,7 +202,7 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
                 <div className="font-editorial text-xs sm:text-sm font-bold text-stone-900 group-hover:text-rose-600 transition-colors line-clamp-1">
                   Baulk Line Extension & Retreat
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>

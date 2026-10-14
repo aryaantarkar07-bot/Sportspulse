@@ -115,10 +115,10 @@ export const ARTICLES: Article[] = [
         ]
       },
       {
-        heading: "The Changing Landscape: From Attrition to Boundary Equity",
+        heading: "Why Has Modern Cricket Shifted from Defensive Attrition to Boundary Equity?",
         level: 'h2',
         paragraphs: [
-          "To understand how fundamentally the landscape has evolved, one must look closely at how modern scoring rates interact with risk management. In previous eras, a team scoring at 3.2 runs per over in Test cricket was considered dominant; today, the expectation routinely touches 4.5, even when conditions offer lateral movement.",
+          "Modern cricket shifted from defensive attrition to boundary equity because advanced mathematical run-expectancy models proved that dot balls represent catastrophic resource leakage. In previous eras, a team scoring at 3.2 runs per over in Test cricket was considered dominant; today, the expectation routinely touches 4.5, even when conditions offer lateral movement.",
           "In white-ball formats, the change is even more acute. The old template—anchoring through overs 10 to 35 before exploding in the final ten—has been cast aside as statistically obsolete. Instead, modern tactical models view dot balls as irreparable resource leakages. A batter who scores 40 off 38 deliveries is no longer praised for 'steadiness'; their innings is analyzed through the lens of lost equity.",
           "Domestic pathways have adapted accordingly. The Ranji Trophy, long regarded as a sanctuary of classical restraint, now features batters who manipulate field settings through reverse-sweeps and ramps against express seamers. Scouts are no longer scouring the nation exclusively for defensive solidity; they want spatial awareness, boundary-option versatility, and an emotional indifference to failure.",
           "Coaches at the junior levels report that teenagers now arrive at academies with pre-programmed boundary routines. Where previous generations spent their formative years perfecting the forward defensive block under the watchful eye of hard-bitten purists, today's trainees spend three hours a day rehearsing bat-swing trajectories designed to elevate balls over mid-off with an inverted bat face. The biomechanics of the cover drive have evolved from an elbow-high push to a rotational torque strike that channels kinetic energy from the rear hip through the core and into the wrists."
@@ -181,10 +181,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Day 3 Afternoon Session"
           }
         },
-        heading: "The Players to Watch: Three Archetypes Defining the Future",
+        heading: "Which Young Cricketers Are Defining India's Next Tactical Era?",
         level: 'h2',
         paragraphs: [
-          "A generation is defined by its standard-bearers. At the summit of this movement stands Yashasvi Jaiswal, whose technical repertoire marries the wristy elegance of classic subcontinental batsmanship with the ferocious bat speed demanded by contemporary boundaries. His hunger for monumental centuries is old-fashioned; his tempo is revolutionary.",
+          "India's next tactical era is spearheaded by Yashasvi Jaiswal, Shubman Gill, and Tilak Varma—three distinct batting archetypes who combine textbook red-ball mechanics with fearless 360-degree boundary hitting. At the summit of this movement stands Yashasvi Jaiswal, whose technical repertoire marries the wristy elegance of classic subcontinental batsmanship with the ferocious bat speed demanded by contemporary boundaries. His hunger for monumental centuries is old-fashioned; his tempo is revolutionary.",
           "Alongside him, Shubman Gill represents the refined synthesizer: an immaculate front-foot driver who can glide from classical defensive compact balance into sudden 160-strike-rate demolition without fracturing his shape. Where older critics questioned whether aesthetic purity could survive in the hyper-condensed format, Gill has proved that textbook balance is the ultimate foundation for power.",
           "Further down the order, Tilak Varma and Rinku Singh personify the nerve-center of crisis management. They are not merely sloggers; they possess an icy situational clarity, calculating required rates against specific bowling types and exploiting the short boundary with surgical precision.",
           "In the bowling department, the evolution is equally pronounced. The emergence of left-arm pacers who can swing the white Kookaburra late while delivering yorkers at 145 km/h in the nineteenth over has restored equilibrium to a format heavily weighted in favor of batting artillery."
@@ -347,9 +347,10 @@ export const ARTICLES: Article[] = [
         ]
       },
       {
-        heading: "The Disappearance of the Fixed Role: The Full-Back as Playmaker",
+        heading: "Why Has the Traditional Full-Back Transformed into Modern Football's Primary Playmaker?",
         level: 'h2',
         paragraphs: [
+          "The traditional full-back transformed into football's primary playmaker because opponent mid-blocks have become too compact to breach solely through direct central passes. By inverting inside during possession, full-backs manufacture numerical midfield overloads, open diagonal channels for attacking wingers, and insulate their team against transition counters.",
           "For decades, football was structured around specialization. Wingers hugged touchlines to cross with their dominant foot; center-backs cleared danger without aesthetic pretense; strikers waited inside the 18-yard box for deliveries.",
           "Today, a center-back who cannot break lines with a 35-yard diagonal or carry the ball past the first pressing wave is practically unplayable at the top level. Goalkeepers are judged as much on their passing completion under pressure as their shot-stopping reflexes.",
           "The clearest manifestation of this revolution is the inverted full-back. Pioneered by Pep Guardiola and refined across Europe, players who nominally start in wide defense now drift into central midfield during the possession phase, creating an overload against opposing central pivots and insulating their side against counter-attacks."
@@ -377,10 +378,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "90-Minute Final"
           }
         },
-        heading: "The Half-Space Revolution: Weaponizing the Verticals",
+        heading: "How Do Attacking Teams Exploit the Half-Spaces Against Low Defensive Blocks?",
         level: 'h2',
         paragraphs: [
-          "The true battleground of modern football is the half-space—the vertical channel situated between the wing and the central corridor. By occupying both half-spaces simultaneously with two attacking midfielders while wingers pin the opposing full-backs wide, attacking teams create an unsolvable dilemma for low blocks.",
+          "Attacking teams exploit the half-spaces—the vertical channels between flank and center corridor—by positioning two attacking playmakers inside these pockets while wingers pin the opposing defense wide. Defenders must either step out to challenge, conceding gaps behind, or stay compact and concede shooting opportunities from the edge of the penalty box.",
           "Defenders must either step out to challenge, creating gaps in behind, or stay compact and concede shooting opportunities from the edge of the penalty arc. The precision required to execute this choreography is why coaching training sessions resemble chess tournaments more than athletic drills.",
           "In Asian football and the Indian Super League, clubs like Mumbai City and Mohun Bagan have embraced positional play with extraordinary discipline. Local midfielders are trained to recognize pressing triggers and rotate through positions in synchronization, elevating the tactical baseline of domestic competitions."
         ]
@@ -547,10 +548,10 @@ export const ARTICLES: Article[] = [
         ]
       },
       {
-        heading: "The Geometry of the Chain Defense",
+        heading: "How Does a Coordinated Chain Defense Trap and Immobilize an Express Raider?",
         level: 'h2',
         paragraphs: [
-          "To the untrained spectator, kabaddi defense looks like an avalanche of human limbs. To a sports scientist, it is a fluid kinetic trap. Defenders work in linked pairs—the 'Cover' and the 'Corner'—connected at the wrist to create an elastic barrier.",
+          "A coordinated chain defense traps and immobilizes an express raider through paired kinetic synchronization between the 'Cover' and 'Corner' defenders linked at the wrists. When the raider presses into the corner corridor, the cover shifts diagonally forward to shut the escape lane, generating over 1,200 Newtons of clamping force around the ankle while absorbing the raider's forward momentum.",
           "When the raider moves toward the right corner, the left cover shifts forward diagonally, closing the escape corridor like the jaws of a hydraulic clamp. If the raider hesitates for a quarter-second, the corner strikes at the ankle while the cover delivers an upper-body block that absorbs all kinetic momentum.",
           "The mathematics of the ankle hold are brutal. When an elite corner defender locks both hands around a raider's Achilles tendon, they exert a clamping force of over 1,200 Newtons, anchoring their own body weight to the mat while simultaneously using the raider's forward inertia against them."
         ],
@@ -577,10 +578,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Do-or-Die Final Minutes"
           }
         },
-        heading: "The Anatomy of the Dubki: Sub-Second Escape Kinetics",
+        heading: "What Biomechanics Allow Raiders to Execute the Dubki Escape in Under 0.35 Seconds?",
         level: 'h2',
         paragraphs: [
-          "Of all the offensive maneuvers in sport, none is more breathtaking than the 'Dubki'. Popularized by legends like Pardeep Narwal, the maneuver requires a raider to sprint directly toward a converging two-man chain, abruptly drop their center of gravity down to 30 centimeters above the mat, and slide horizontally beneath the defenders' outstretched arms.",
+          "Raiders execute the Dubki escape in under 0.35 seconds by dropping their center of gravity down to 30 centimeters above the mat while in full sprint, sliding horizontally beneath the defenders' outstretched arms. The athlete's quadriceps and core absorb decelerative forces three times their body weight before instantaneously propelling forward toward the midline.",
           "Motion-capture telemetry recorded in modern sports labs shows that the transition from upright sprint to floor-level slide occurs in less than 0.35 seconds. The raider's thighs and core must absorb decelerative forces three times their body weight before instantaneously propelling forward toward the midline.",
           "Defenders have responded by lowering their own stance, leading to a game of visual bluffing where raiders feint with shoulder twitches to induce premature tackles before executing a frog jump clean over the defender's back."
         ]
@@ -754,10 +755,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Bronze Medal Triumph"
           }
         },
-        heading: "The Science of the Penalty Corner",
+        heading: "How Does Modern Penalty Corner Drag-Flick Kinetics Beat Goalkeepers in Under 1.8 Seconds?",
         level: 'h2',
         paragraphs: [
-          "No play in modern sport is more brutally condensed than the penalty corner drag-flick. From the moment the ball is injected from the backline to the moment it crashes into the goalboard, barely 1.8 seconds elapse.",
+          "A modern penalty corner drag-flick beats goalkeepers in under 1.8 seconds through a three-stage mechanical chain: a 70 km/h baseline injection, zero-bounce cushion stoppage, and rotational torso torque that propels the ball at 120 km/h into the top netting. From the moment the ball is injected from the backline to the moment it crashes into the goalboard, barely 1.8 seconds elapse.",
           "In that window, the injector must deliver a flat pass at 70 km/h, the stopper must cushion the rolling sphere on the circle edge without bounce, and the drag-flicker must channel the rotational force of their entire torso through a customized hook stick to propel a hard plastic projectile at 120 km/h into an area no larger than a shoebox.",
           "Defenders run toward the shooter wearing polycarbonate face masks and protective knee guards, risking severe bodily impact to shave tenths of a second off the shooter's visual angle."
         ]
@@ -780,10 +781,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Under the Floodlights"
           }
         },
-        heading: "Aerial Scoops and Spatial Manipulation",
+        heading: "Why Have Aerial Scoops Become Field Hockey's Most Potent Offensive Solution?",
         level: 'h2',
         paragraphs: [
-          "With defenses packing nine players into the 23-meter zone, the 3D aerial scoop has emerged as hockey's most lethal weapon. Midfielders effortlessly lob the ball 50 meters through the air over the entire defensive block to find an isolated striker inside the circle.",
+          "Aerial scoops have become field hockey's most potent offensive weapon because congested modern defenses pack eight to nine players across the 23-meter zone, shutting all ground passing lanes. By launching 3D scoops 50 meters through the air over the entire defensive block, midfielders effortlessly bypass congestion to land directly on an isolated striker's stick.",
           "Controlling an aerial ball with a one-inch stick edge while running at 30 km/h requires hand-eye coordination that rivals fighter pilots. It is in these moments of aerial finesse where the classic subcontinental stickwork has found its modern, devastating rebirth."
         ]
       },
@@ -923,10 +924,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Fifth-Set Marathon"
           }
         },
-        heading: "Offensive Defense as the New Baseline Religion",
+        heading: "Why Has 'Offensive Defense' Replaced the Classic Slice in Modern Baseline Rallies?",
         level: 'h2',
         paragraphs: [
-          "In the 2000s, being stretched wide meant floating a defensive slice to buy recovery time. If you float a defensive slice against Sinner in 2026, the point is already over. Today's players slide six feet past the tramlines and hit full-throttle open-stance lasers that hit the corner at 92 mph. Defense is no longer about survival; it is an ambush.",
+          "'Offensive defense' replaced the classic slice because today's tour players punish floating defensive balls instantly with 95 mph put-aways. Instead of slicing to buy recovery time, modern champions slide out wide and counter-attack with open-stance heavy topspin lasers that turn emergency defensive slides into immediate winning angles.",
           "The strain on the human joints is immense. Ankles, knees, and lower lumbar regions absorb lateral forces comparable to alpine skiers navigating slalom turns. Players travel with dedicated physios who administer dry needling, hyperbaric oxygen therapy, and kinetic chain alignment routines after every match."
         ]
       },
@@ -948,10 +949,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Fourth-Set Climax"
           }
         },
-        heading: "The Disappearance of the Defensive Return",
+        heading: "How Does Modern Return-of-Serve Aggression Neutralize 135mph First Serves?",
         level: 'h2',
         paragraphs: [
-          "Perhaps the most radical evolution has occurred on the return of serve. While Djokovic mastered the art of deep, neutral blocking, Alcaraz and Sinner step forward onto the baseline, taking 135 mph serves on the rise and attacking with full rotational swings.",
+          "Modern return aggression neutralizes 135 mph first serves by taking the ball right on the rise inside the baseline with compact rotational swings, rather than relying on deep neutral blocks. This strips valuable recovery seconds from the server, instantly forcing them onto the back foot on shot two.",
           "The psychological toll on servers is immense. A serve that would have yielded a comfortable service hold ten years ago is now returned with interest, forcing the server to defend from their very first baseline stroke."
         ]
       },
@@ -1089,10 +1090,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Qualifying Pole Lap"
           }
         },
-        heading: "The Active Aero Revolution: Straight-Line Trim Mode",
+        heading: "How Do 2026 Active Aerodynamics Switch Modes Between Corners and Straights?",
         level: 'h2',
         paragraphs: [
-          "With so much electrical power deployed down the straights, cars threatened to run out of battery before reaching the braking zone. The solution? Movable aerodynamic surfaces. In corners, wings open to deliver crushing downforce; on straights, they trim out into ultra-low-drag slivers.",
+          "The 2026 active aerodynamics system switches modes through hydraulically actuated front and rear wing flaps that trim down into ultra-low-drag slivers on straights to conserve battery charge, then snap open into maximum angle of attack under braking to generate crushing downforce for high-speed corners.",
           "This dynamic aerodynamic reconfiguration fundamentally changes how drivers experience the car. At 320 km/h, the car suddenly sheds hundreds of kilograms of aerodynamic drag, feeling featherweight before slamming back into maximum downforce the instant the driver touches the brake pedal."
         ]
       },
@@ -1255,10 +1256,10 @@ export const ARTICLES: Article[] = [
             dateOrEra: "Sub-9.80 Dash"
           }
         },
-        heading: "The Carbon Spike Revolution: Mechanical Energy Return",
+        heading: "How Do Modern Carbon Super-Spikes Enhance Mechanical Energy Return?",
         level: 'h2',
         paragraphs: [
-          "Just as carbon plates revolutionized the marathon, track spikes have undergone a radical transformation. Traditional spikes were paper-thin leather slippers designed solely for traction. Modern 'super spikes' feature a curved carbon plate embedded between resilient PEBAX foam.",
+          "Modern carbon super-spikes enhance mechanical energy return by embedding a stiff, curved carbon-composite lever plate between resilient PEBAX foam layers. This rigid lever prevents the big toe from bending backward upon impact, channeling 4.8x bodyweight ground reaction forces directly into horizontal acceleration in under 0.08 seconds.",
           "This stiff plate acts as a rigid lever arm, preventing the big toe from bending backwards upon impact and channeling ground reaction forces directly back into horizontal propulsion."
         ]
       },

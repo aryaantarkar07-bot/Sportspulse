@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Clock, Calendar } from 'lucide-react';
 import { Article } from '../types';
 import { SportsArtwork } from './SportsArtwork';
+import { getArticleUrl } from '../utils/router';
 
 interface FeaturedHeroProps {
   article: Article;
@@ -9,13 +10,19 @@ interface FeaturedHeroProps {
 }
 
 export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArticle }) => {
+  const articleUrl = getArticleUrl(article.category, article.slug);
+
   return (
     <section className="border-b border-stone-200 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-14 text-center">
         {/* Large Hero Image */}
-        <div
-          onClick={() => onSelectArticle(article)}
-          className="group cursor-pointer rounded-2xl overflow-hidden border border-stone-200 shadow-sm mb-8 transition-all hover:border-stone-400 hover:shadow-lg"
+        <a
+          href={articleUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`Read featured story: ${article.title} in a new tab`}
+          aria-label={`Read featured story: ${article.title} in a new tab`}
+          className="group cursor-pointer rounded-2xl overflow-hidden border border-stone-200 shadow-sm mb-8 transition-all hover:border-stone-400 hover:shadow-lg block no-underline"
         >
           <SportsArtwork
             category={article.category}
@@ -26,7 +33,7 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
             className="w-full max-h-[580px] group-hover:scale-101 transition-transform duration-500"
             priority
           />
-        </div>
+        </a>
 
         {/* Category & Featured Badge */}
         <div className="flex items-center justify-center gap-2 mb-3">
@@ -39,12 +46,17 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
           </span>
         </div>
 
-        {/* Main Headline */}
-        <h1
-          onClick={() => onSelectArticle(article)}
-          className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-stone-950 max-w-4xl mx-auto leading-[1.14] mb-4 hover:text-rose-600 transition-colors cursor-pointer text-balance"
-        >
-          {article.title}
+        {/* Main Headline with Semantic Link */}
+        <h1 className="max-w-4xl mx-auto mb-4">
+          <a
+            href={articleUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`Read featured story: ${article.title} in a new tab`}
+            className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-stone-950 leading-[1.14] hover:text-rose-600 transition-colors cursor-pointer text-balance no-underline block"
+          >
+            {article.title}
+          </a>
         </h1>
 
         {/* Excerpt / Deck */}
@@ -64,15 +76,18 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
           <span>{article.wordCount.toLocaleString()} words</span>
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Anchor Link */}
         <div>
-          <button
-            onClick={() => onSelectArticle(article)}
-            className="inline-flex items-center gap-2 px-6 py-3.5 bg-stone-900 hover:bg-rose-600 text-white font-sans text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all duration-200 shadow-sm hover:shadow group cursor-pointer"
+          <a
+            href={articleUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`Read complete article: ${article.title} in a new tab`}
+            className="inline-flex items-center gap-2 px-6 py-3.5 bg-stone-900 hover:bg-rose-600 text-white font-sans text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all duration-200 shadow-sm hover:shadow group cursor-pointer no-underline"
           >
             <span>READ THE STORY</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </a>
         </div>
       </div>
     </section>
