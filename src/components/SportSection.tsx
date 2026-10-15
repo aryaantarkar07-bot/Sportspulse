@@ -45,7 +45,13 @@ export const SportSection: React.FC<SportSectionProps> = ({
               href={categoryUrl}
               target="_blank"
               rel="noopener noreferrer"
-              title={`Explore ${sport} Desk in a new tab`}
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onViewCategory(sport);
+                }
+              }}
+              title={`Explore ${sport} Desk (Click to view, Ctrl/Cmd+Click to open in new tab)`}
               className="text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 flex items-center gap-1 group no-underline"
             >
               <span>Explore {sport} Desk</span>
@@ -63,7 +69,13 @@ export const SportSection: React.FC<SportSectionProps> = ({
                 href={largeArticleUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`Read story: ${largeArticle.title} in a new tab`}
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onSelectArticle(largeArticle);
+                  }
+                }}
+                title={`Read story: ${largeArticle.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                 className="block rounded-xl overflow-hidden border border-stone-200 shadow-xs mb-5 cursor-pointer no-underline"
               >
                 <SportsArtwork
@@ -73,6 +85,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
                   aspectRatio="16/9"
                   className="w-full h-auto group-hover:scale-101 transition-transform duration-300"
                 />
+                <span className="sr-only">Read lead story: {largeArticle.title}</span>
               </a>
 
               <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-stone-400 mb-2">
@@ -86,7 +99,13 @@ export const SportSection: React.FC<SportSectionProps> = ({
                   href={largeArticleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`Read story: ${largeArticle.title} in a new tab`}
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onSelectArticle(largeArticle);
+                    }
+                  }}
+                  title={`Read story: ${largeArticle.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                   className="font-editorial text-2xl sm:text-3xl md:text-4xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight text-balance no-underline block"
                 >
                   {largeArticle.title}
@@ -104,6 +123,12 @@ export const SportSection: React.FC<SportSectionProps> = ({
                 href={largeArticleUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onSelectArticle(largeArticle);
+                  }
+                }}
                 title={`Read Magazine Story: ${largeArticle.title} in a new tab`}
                 className="text-rose-600 font-semibold group-hover:translate-x-1 transition-transform no-underline flex items-center gap-1"
               >
@@ -138,6 +163,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
                         aspectRatio="4/3"
                         className="w-full h-auto group-hover:scale-102 transition-transform duration-300"
                       />
+                      <span className="sr-only">Read story: {article.title}</span>
                     </a>
                     <div className="sm:col-span-7">
                       <div className="text-[10px] font-mono uppercase tracking-wider text-stone-400 mb-1">

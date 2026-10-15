@@ -20,8 +20,14 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
           href={articleUrl}
           target="_blank"
           rel="noopener noreferrer"
-          title={`Read featured story: ${article.title} in a new tab`}
-          aria-label={`Read featured story: ${article.title} in a new tab`}
+          onClick={(e) => {
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+              e.preventDefault();
+              onSelectArticle(article);
+            }
+          }}
+          title={`Read featured story: ${article.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
+          aria-label={`Read featured story: ${article.title}`}
           className="group cursor-pointer rounded-2xl overflow-hidden border border-stone-200 shadow-sm mb-8 transition-all hover:border-stone-400 hover:shadow-lg block no-underline"
         >
           <SportsArtwork
@@ -33,6 +39,7 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
             className="w-full max-h-[580px] group-hover:scale-101 transition-transform duration-500"
             priority
           />
+          <span className="sr-only">Read featured story: {article.title}</span>
         </a>
 
         {/* Category & Featured Badge */}
@@ -52,7 +59,13 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
             href={articleUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title={`Read featured story: ${article.title} in a new tab`}
+            onClick={(e) => {
+              if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                e.preventDefault();
+                onSelectArticle(article);
+              }
+            }}
+            title={`Read featured story: ${article.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
             className="font-editorial text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-stone-950 leading-[1.14] hover:text-rose-600 transition-colors cursor-pointer text-balance no-underline block"
           >
             {article.title}
@@ -82,6 +95,12 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
             href={articleUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                e.preventDefault();
+                onSelectArticle(article);
+              }
+            }}
             title={`Read complete article: ${article.title} in a new tab`}
             className="inline-flex items-center gap-2 px-6 py-3.5 bg-stone-900 hover:bg-rose-600 text-white font-sans text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg transition-all duration-200 shadow-sm hover:shadow group cursor-pointer no-underline"
           >

@@ -70,8 +70,14 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
               href={`/${getSportSlug(player.sport)}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onBack();
+                }
+              }}
               className="hover:text-rose-600 cursor-pointer uppercase transition-colors"
-              title={`View ${player.sport} desk in a new tab`}
+              title={`View ${player.sport} desk (Click to view, Ctrl/Cmd+Click for new tab)`}
             >
               {player.sport} Desk
             </a>
@@ -622,7 +628,13 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                           href={getArticleUrl(art.category, art.slug)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          title={`Read story: ${art.title} in a new tab`}
+                          onClick={(e) => {
+                            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                              e.preventDefault();
+                              onSelectArticle(art);
+                            }
+                          }}
+                          title={`Read story: ${art.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                           className="group cursor-pointer p-4 rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-xs transition-all flex items-start justify-between gap-4 no-underline bg-white block"
                         >
                           <div>
@@ -670,7 +682,13 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                 href={`/${getSportSlug(player.sport)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`Full ${player.sport} Desk in a new tab`}
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onBack();
+                  }
+                }}
+                title={`Full ${player.sport} Desk (Click to view, Ctrl/Cmd+Click for new tab)`}
                 className="text-xs font-mono font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 no-underline"
               >
                 <span>Full {player.sport} Desk</span>
@@ -685,8 +703,14 @@ export const PlayerProfileView: React.FC<PlayerProfileViewProps> = ({
                   href={getPlayerUrl(peer.sport, peer.slug)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`View ${peer.name} Dossier in a new tab`}
-                  aria-label={`View ${peer.name} ${peer.sport} dossier in a new tab`}
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onSelectPlayer(peer);
+                    }
+                  }}
+                  title={`View ${peer.name} Dossier (Click to view, Ctrl/Cmd+Click for new tab)`}
+                  aria-label={`View ${peer.name} ${peer.sport} dossier`}
                   className="group cursor-pointer bg-white rounded-xl border border-stone-200 hover:border-stone-400 hover:shadow-md transition-all p-3 text-center flex flex-col justify-between no-underline block"
                 >
                   <div className="aspect-square rounded-lg overflow-hidden bg-stone-100 mb-2.5 relative">

@@ -758,8 +758,14 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
               href={`/${getSportSlug(article.category)}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onBack();
+                }
+              }}
               className="text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer no-underline"
-              title={`View all ${article.category} features in a new tab`}
+              title={`View all ${article.category} features (Click to view, Ctrl/Cmd+Click for new tab)`}
             >
               <span>View All {article.category} Stories</span>
               <ChevronRight className="w-4 h-4" />
@@ -775,7 +781,13 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   href={relUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`Read story: ${rel.title} in a new tab`}
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onSelectArticle(rel);
+                    }
+                  }}
+                  title={`Read story: ${rel.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                   className="group cursor-pointer bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-md transition-all flex flex-col justify-between no-underline block"
                 >
                   <div>

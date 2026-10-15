@@ -50,7 +50,13 @@ export const TrendingList: React.FC<TrendingListProps> = ({ articles, onSelectAr
                       href={articleUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title={`Read story: ${article.title} in a new tab`}
+                      onClick={(e) => {
+                        if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                          e.preventDefault();
+                          onSelectArticle(article);
+                        }
+                      }}
+                      title={`Read story: ${article.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                       className="font-editorial text-xl sm:text-2xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-snug no-underline block"
                     >
                       {article.title}
@@ -70,6 +76,12 @@ export const TrendingList: React.FC<TrendingListProps> = ({ articles, onSelectAr
                     href={articleUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                        e.preventDefault();
+                        onSelectArticle(article);
+                      }
+                    }}
                     title={`Read Dispatch: ${article.title} in a new tab`}
                     className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform no-underline flex items-center gap-1"
                   >

@@ -203,9 +203,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                       href={playerUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => onClose()}
-                      title={`Open ${player.name} Dossier in a new tab`}
-                      aria-label={`Open ${player.name} ${player.sport} dossier in a new tab`}
+                      onClick={(e) => {
+                        if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                          e.preventDefault();
+                          if (onSelectPlayer) onSelectPlayer(player);
+                        }
+                        onClose();
+                      }}
+                      title={`Open ${player.name} Dossier (Click to view, Ctrl/Cmd+Click for new tab)`}
+                      aria-label={`Open ${player.name} ${player.sport} dossier`}
                       className="p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 transition-all cursor-pointer flex items-center gap-3 group no-underline block"
                     >
                       <div className="w-12 h-12 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200 relative">
@@ -266,8 +272,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                       href={artUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => onClose()}
-                      title={`Read ${art.title} in a new tab`}
+                      onClick={(e) => {
+                        if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                          e.preventDefault();
+                          onSelectArticle(art);
+                        }
+                        onClose();
+                      }}
+                      title={`Read ${art.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                       className="py-3 px-3 rounded-lg hover:bg-stone-50 transition-colors group cursor-pointer flex items-center justify-between gap-4 no-underline block"
                     >
                       <div className="min-w-0">

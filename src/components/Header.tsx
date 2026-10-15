@@ -160,8 +160,14 @@ export const Header: React.FC<HeaderProps> = ({
                 href={getCategoryUrl(cat.name)}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`Explore ${cat.name} desk in a new tab`}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors no-underline ${
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onSelectCategory(cat.name);
+                  }
+                }}
+                title={`Explore ${cat.name} desk (Click to view, Ctrl/Cmd+Click to open in new tab)`}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors no-underline group ${
                   activeCategory === cat.name
                     ? 'bg-rose-600 text-white'
                     : 'hover:text-stone-900 hover:bg-stone-100'
@@ -169,6 +175,17 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <span>{cat.emoji}</span>
                 <span>{cat.name}</span>
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(getCategoryUrl(cat.name), '_blank', 'noopener,noreferrer');
+                  }}
+                  title={`Open ${cat.name} desk in a new tab`}
+                  className="text-[10px] opacity-40 group-hover:opacity-100 hover:scale-110 transition-all ml-0.5"
+                  aria-label={`Open ${cat.name} in a new tab`}
+                >
+                  ↗
+                </span>
               </a>
             ))}
           </div>
@@ -207,15 +224,33 @@ export const Header: React.FC<HeaderProps> = ({
                       href={getCategoryUrl(cat.name)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => setMenuOpen(false)}
-                      title={`Visit ${cat.name} Desk in a new tab`}
-                      className="flex items-center justify-between p-2.5 text-left rounded-lg border border-stone-100 hover:border-stone-300 hover:bg-stone-50 transition-all text-sm text-stone-800 no-underline"
+                      onClick={(e) => {
+                        if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                          e.preventDefault();
+                          onSelectCategory(cat.name);
+                        }
+                        setMenuOpen(false);
+                      }}
+                      title={`Visit ${cat.name} Desk (Click to view, Ctrl/Cmd+Click to open in new tab)`}
+                      className="flex items-center justify-between p-2.5 text-left rounded-lg border border-stone-100 hover:border-stone-300 hover:bg-stone-50 transition-all text-sm text-stone-800 no-underline group"
                     >
                       <span className="flex items-center gap-2">
                         <span>{cat.emoji}</span>
-                        <span className="font-medium">{cat.name}</span>
+                        <span className="font-medium group-hover:text-rose-600 transition-colors">{cat.name}</span>
                       </span>
-                      <span className="text-[11px] font-mono text-stone-400">{cat.count}</span>
+                      <span className="text-[11px] font-mono text-stone-400 flex items-center gap-1.5">
+                        <span>{cat.count}</span>
+                        <span
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(getCategoryUrl(cat.name), '_blank', 'noopener,noreferrer');
+                          }}
+                          className="opacity-40 group-hover:opacity-100 hover:text-rose-600 cursor-pointer"
+                          title="Open in new tab"
+                        >
+                          ↗
+                        </span>
+                      </span>
                     </a>
                   ))}
                 </div>

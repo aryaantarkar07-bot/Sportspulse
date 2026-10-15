@@ -58,7 +58,13 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
                   href={articleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`Read story: ${article.title} in a new tab`}
+                  onClick={(e) => {
+                    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                      e.preventDefault();
+                      onSelectArticle(article);
+                    }
+                  }}
+                  title={`Read story: ${article.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                   className="font-editorial text-2xl sm:text-3xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight no-underline block"
                 >
                   {article.title}
@@ -92,6 +98,12 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
                 href={articleUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onSelectArticle(article);
+                  }
+                }}
                 title={`Read Kabaddi Investigation: ${article.title} in a new tab`}
                 className="text-rose-600 font-bold group-hover:translate-x-1 transition-transform no-underline flex items-center gap-1"
               >

@@ -93,7 +93,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenArchitec
                 href={getCategoryUrl(cat.name)}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`Visit ${cat.name} Desk in a new tab`}
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onSelectCategory(cat.name);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                title={`Visit ${cat.name} Desk (Click to view, Ctrl/Cmd+Click to open in new tab)`}
                 className="flex items-center gap-2 text-left text-stone-600 hover:text-rose-600 transition-colors py-1 group cursor-pointer no-underline"
               >
                 <span>{cat.emoji}</span>
@@ -102,9 +109,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenArchitec
             ))}
             <a
               href={getHomeUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="View all sports archives in a new tab"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onSelectCategory('ALL');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              title="View all sports archives"
               className="flex items-center gap-2 text-left text-rose-600 hover:text-rose-700 transition-colors py-1 font-bold group cursor-pointer no-underline"
             >
               <span>🌐</span>

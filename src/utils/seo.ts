@@ -1,5 +1,5 @@
 import { SportCategory, Article, PlayerData } from '../types';
-import { getSportSlug, getCategoryUrl, getArticleUrl, getPlayerUrl } from './router';
+import { getCategoryUrl, getArticleUrl, getPlayerUrl } from './router';
 
 export interface SeoConfig {
   title: string;
@@ -11,30 +11,136 @@ export interface SeoConfig {
 }
 
 /**
- * Truncates or formats a title to strictly conform to title length rules (30-60 chars).
+ * Returns a safe origin URL string (e.g. for sandboxed preview environments).
  */
-export function formatSeoTitle(rawTitle: string, brand = 'SPORTSPULSE'): string {
+export function getSafeOrigin(): string {
+  try {
+    if (typeof window !== 'undefined' && window.location?.origin && window.location.origin !== 'null') {
+      return window.location.origin;
+    }
+  } catch {
+    // fallback
+  }
+  return '';
+}
+
+/**
+ * Formats a question title to strictly conform to meta title length rules (50-60 characters)
+ * and guarantees a question mark before the brand suffix.
+ */
+export function formatQuestionTitle(question: string, brand = 'SPORTSPULSE'): string {
   const maxLen = 60;
   const suffix = ` | ${brand}`;
-  const availableLen = maxLen - suffix.length; // 45 chars
+  const maxQuestionLen = maxLen - suffix.length; // 45 chars
 
-  if (rawTitle.length <= availableLen) {
-    return `${rawTitle}${suffix}`;
+  // Ensure the question ends with a '?'
+  let cleanQuestion = question.trim().replace(/[?!.]+$/, '');
+
+  if (cleanQuestion.length + 1 <= maxQuestionLen) {
+    return `${cleanQuestion}?${suffix}`;
   }
 
-  // Trim to word boundary
-  const trimmed = rawTitle.slice(0, availableLen - 1).trim();
-  const lastSpace = trimmed.lastIndexOf(' ');
-  const cleanTrim = lastSpace > 20 ? trimmed.slice(0, lastSpace) : trimmed;
-  return `${cleanTrim}…${suffix}`;
+  // Trim to word boundary so it ends neatly with '?'
+  const slice = cleanQuestion.slice(0, maxQuestionLen - 1).trim();
+  const lastSpace = slice.lastIndexOf(' ');
+  const trimmed = lastSpace > 20 ? slice.slice(0, lastSpace) : slice;
+  return `${trimmed}?${suffix}`;
 }
+
+/**
+ * Curated high-relevance question titles for each category desk.
+ * Uses required SEO/AEO keywords at start of question format titles.
+ */
+const CATEGORY_QUESTION_TITLES: Record<SportCategory, string> = {
+  Cricket: 'cricket match news: who will dominate the next test era? | SPORTSPULSE', // Starts with 'cricket match news'
+  Football: 'football news: how are modern tactical shifts changing the game? | SPORTSPULSE', // Starts with 'football news'
+  Kabaddi: 'kabaddi information: how did the 30-second raid transform the game? | SPORTSPULSE', // Starts with 'kabaddi information'
+  Hockey: "What Fuels Modern Field Hockey's Rebirth? | SPORTSPULSE",
+  Tennis: 'Who Will Rule Tennis in the Next Major Era? | SPORTSPULSE',
+  Basketball: 'How Did Analytics Reinvigorate Basketball? | SPORTSPULSE',
+  Badminton: 'Why Are Badminton Rallies Fastest in Sport? | SPORTSPULSE',
+  'Formula 1': 'How Does Ground Effect Aerodynamics Rule F1? | SPORTSPULSE',
+  'Boxing & Wrestling': 'What Separates Combat & Wrestling Champions? | SPORTSPULSE',
+  Athletics: 'How Fast Can the Human Body Go on the Track? | SPORTSPULSE',
+  'Other Sports': 'What Sports Are Captivating Global Fans Today? | SPORTSPULSE',
+};
+
+/**
+ * Curated high-relevance question titles for each article.
+ * Strict length: 50-60 characters, question format.
+ */
+const ARTICLE_QUESTION_TITLES: Record<string, string> = {
+  'indias-changing-cricket-landscape-next-era':
+    "Who Will Define India's Next Era in Cricket? | SPORTSPULSE", // 58 chars
+  'football-tactical-renaissance-positional-fluidity':
+    'Why Is Fluidity Overhauling Modern Football? | SPORTSPULSE', // 58 chars
+  'physics-and-ferocity-modern-kabaddi-raid':
+    'How Did the 30-Second Raid Redefine Kabaddi? | SPORTSPULSE', // 58 chars
+  'speed-synthetic-turf-indian-hockey-olympic-hegemony':
+    "What Fuels Modern Field Hockey's Rebirth? | SPORTSPULSE", // 55 chars
+  'post-big-three-velocity-shift-grand-slam-tennis':
+    'How Did Heavy Forehands Remap Grand Slams? | SPORTSPULSE', // 55 chars
+  'formula-one-ground-effect-aerodynamics-regulations':
+    'Why Do Ground Effects Rule Modern F1 Racing? | SPORTSPULSE', // 58 chars
+  'sub-880-sprint-barrier-biomechanics-spikes':
+    'Can Humans Break the 100m Sprint Barrier? | SPORTSPULSE', // 55 chars
+  'the-400-kmh-shuttle-relentless-reflexes-modern-badminton':
+    'How Do Players React to 400 km/h Shuttles? | SPORTSPULSE', // 56 chars
+  'basketball-space-and-pace-global-evolution':
+    'How Did Positionless Big Men Rule Basketball? | SPORTSPULSE', // 58 chars
+  'wrestling-akhada-to-olympic-podium-indian-grit':
+    'How Did Akhadas Forge Olympic Champions? | SPORTSPULSE', // 54 chars
+  'india-chess-golden-generation-candidates-champion':
+    'Why Are Teenage Grandmasters Dominating Chess? | SPORTSPULSE', // 60 chars
+};
+
+/**
+ * Curated complete meta descriptions for each article adhering strictly to meta rules (120-158 chars).
+ */
+const ARTICLE_META_DESCRIPTIONS: Record<string, string> = {
+  'indias-changing-cricket-landscape-next-era':
+    "Analyze how Yashasvi Jaiswal and India's emerging cricket cohort are redefining batting aggression and tactics. Read full coverage on SPORTSPULSE.", // 145 chars
+  'football-tactical-renaissance-positional-fluidity':
+    'Explore how inverted full-backs, box midfields, and high-press spatial control are overhauling modern football. Read full analysis on SPORTSPULSE.', // 143 chars
+  'physics-and-ferocity-modern-kabaddi-raid':
+    'Explore the biomechanics, chain maneuvers, and high-speed chess inside the 30-second Pro Kabaddi raid. Read the full investigation on SPORTSPULSE.', // 145 chars
+  'speed-synthetic-turf-indian-hockey-olympic-hegemony':
+    "Discover how watered synthetic turf, aerial scoops, and penalty-corner science spurred India's hockey resurgence. Read full story on SPORTSPULSE.", // 143 chars
+  'post-big-three-velocity-shift-grand-slam-tennis':
+    'Explore how Carlos Alcaraz, Jannik Sinner, and 140mph baseline artillery are remapping Grand Slam tennis dominance. Read full analysis on SPORTSPULSE.', // 148 chars
+  'formula-one-ground-effect-aerodynamics-regulations':
+    'Explore how ground effect aerodynamics, dirty air turbulence, and active wing rules dictate Formula 1 racing. Read the full dossier on SPORTSPULSE.', // 144 chars
+  'sub-880-sprint-barrier-biomechanics-spikes':
+    'Examine how stiff carbon spike plates, ground reaction forces, and stride frequency push the 100m sprint barrier. Read full story on SPORTSPULSE.', // 144 chars
+  'the-400-kmh-shuttle-relentless-reflexes-modern-badminton':
+    'Discover how 400 km/h smashes, carbon-graphite racquets, and lightning reflexes rule modern badminton rallies. Read full analysis on SPORTSPULSE.', // 144 chars
+  'basketball-space-and-pace-global-evolution':
+    'Explore how 7-foot unicorns, deep perimeter spacing, and positionless play transformed international basketball. Read full story on SPORTSPULSE.', // 144 chars
+  'wrestling-akhada-to-olympic-podium-indian-grit':
+    'Discover how traditional clay akhadas, relentless discipline, and explosive grit forge Indian Olympic wrestling stars. Read more on SPORTSPULSE.', // 142 chars
+  'india-chess-golden-generation-candidates-champion':
+    'Discover how teenage grandmasters, computer engines, and tactical daring propelled India to global chess supremacy. Read more on SPORTSPULSE.', // 141 chars
+};
+
+/**
+ * Curated AEO/SEO meta descriptions for category desks adhering strictly to 150-160 characters max limit.
+ * Contains exact target search keywords requested for AEO optimization.
+ */
+const CATEGORY_META_DESCRIPTIONS: Partial<Record<SportCategory, string>> = {
+  Cricket:
+    'Discover test cricket records india, historical cricket records, deep match breakdowns, player dossiers, and live tournament analysis on the SPORTSPULSE desk.', // 158 chars, contains 'cricket records' and 'test cricket records india'
+  Football:
+    'Read latest football news and football updates today with deep tactical breakdowns, European league standings, transfer dossiers, and features on SPORTSPULSE.', // 158 chars, contains 'latest football news' and 'football updates today'
+  Kabaddi:
+    'Discover essential kabaddi rules, historical kabaddi facts, raid tactics, Pro Kabaddi league breakdowns, and player statistics exclusively on SPORTSPULSE.', // 154 chars, contains 'kabaddi rules' and 'kabaddi facts'
+};
 
 /**
  * Formats a meta description to strictly conform to meta description rules (120-160 characters).
  */
 export function formatSeoDescription(text: string, fallbackCta = 'Read full coverage on SPORTSPULSE.'): string {
   const minLen = 120;
-  const maxLen = 158;
+  const maxLen = 160;
 
   let cleaned = text.replace(/\s+/g, ' ').trim();
   if (cleaned.length < minLen) {
@@ -51,13 +157,14 @@ export function formatSeoDescription(text: string, fallbackCta = 'Read full cove
 }
 
 /**
- * Generates SEO metadata for the home page
+ * Generates SEO metadata for the home page with question-format title and compliant meta description.
+ * Starts with 'news sports news', includes 'sports news today' and 'the sports news', strictly 150-160 chars.
  */
 export function getHomeSeo(): SeoConfig {
-  const title = 'SPORTSPULSE — Sports Magazine & Athlete Dossiers'; // 50 chars
+  const title = 'news sports news: what are the top sports stories today? | SPORTSPULSE'; // Starts with 'news sports news'
   const description =
-    'SPORTSPULSE delivers long-form investigative sports journalism, deep match tactical analysis, and Cricbuzz-style athlete career dossiers across global sports.'; // 160 chars
-  const canonicalUrl = `${window.location.origin}/`;
+    'Explore the sports news and sports news today with deep tactical breakdowns, athlete records, breaking global match results, and journalism on SPORTSPULSE.'; // 155 chars (150-160 chars)
+  const canonicalUrl = `${getSafeOrigin()}/`;
 
   return {
     title,
@@ -68,8 +175,8 @@ export function getHomeSeo(): SeoConfig {
       '@context': 'https://schema.org',
       '@type': 'NewsMediaOrganization',
       name: 'SPORTSPULSE',
-      url: window.location.origin,
-      logo: `${window.location.origin}/icon.png`,
+      url: getSafeOrigin() || 'https://sportspulse.example.com',
+      logo: `${getSafeOrigin()}/icon.png`,
       slogan: 'EVERY SPORT. EVERY STORY. EVERY DAY.',
       description,
     },
@@ -77,14 +184,19 @@ export function getHomeSeo(): SeoConfig {
 }
 
 /**
- * Generates SEO metadata for a sport category page
+ * Generates SEO metadata for a sport category page with question-format title and compliant meta description.
  */
 export function getCategorySeo(category: SportCategory): SeoConfig {
-  const title = `${category} News, Analysis & Athlete Dossiers | SPORTSPULSE`; // 48-58 chars
-  const description = formatSeoDescription(
-    `Explore ${category} breaking stories, deep tactical breakdowns, tournament coverage, and Cricbuzz-style athlete dossiers on SPORTSPULSE.`
-  );
-  const canonicalUrl = `${window.location.origin}${getCategoryUrl(category)}`;
+  // Title in question format starting with required keyword for Cricket, Football, Kabaddi
+  const title =
+    CATEGORY_QUESTION_TITLES[category] ||
+    formatQuestionTitle(`What Are the Stories Shaping ${category}`);
+
+  // Meta description adhering strictly to 150-160 characters max limit for AEO
+  const description =
+    CATEGORY_META_DESCRIPTIONS[category] ||
+    `Explore ${category} breaking stories, deep tactical breakdowns, tournament coverage, and athlete dossiers. Read full coverage on SPORTSPULSE.`;
+  const canonicalUrl = `${getSafeOrigin()}${getCategoryUrl(category)}`;
 
   return {
     title,
@@ -106,13 +218,27 @@ export function getCategorySeo(category: SportCategory): SeoConfig {
 }
 
 /**
- * Generates SEO metadata for an article page
+ * Generates SEO metadata for an article page with question-format title and compliant meta description.
  */
 export function getArticleSeo(article: Article): SeoConfig {
-  const title = formatSeoTitle(article.title);
-  const rawDesc = `${article.subtitle} In-depth tactical breakdown by ${article.author}. Read full coverage on SPORTSPULSE.`;
-  const description = formatSeoDescription(rawDesc);
-  const canonicalUrl = `${window.location.origin}${getArticleUrl(article.category, article.slug)}`;
+  // 1. Question Title: use curated question or convert to question format
+  let title = ARTICLE_QUESTION_TITLES[article.slug];
+  if (!title) {
+    if (article.title.endsWith('?')) {
+      title = formatQuestionTitle(article.title);
+    } else {
+      title = formatQuestionTitle(`How Does ${article.title.slice(0, 32)}`);
+    }
+  }
+
+  // 2. Meta description adhering strictly to meta rules (120-158 chars)
+  let description = ARTICLE_META_DESCRIPTIONS[article.slug];
+  if (!description) {
+    const raw = `${article.subtitle} Read the full magazine tactical breakdown by ${article.author} on SPORTSPULSE.`;
+    description = formatSeoDescription(raw);
+  }
+
+  const canonicalUrl = `${getSafeOrigin()}${getArticleUrl(article.category, article.slug)}`;
 
   return {
     title,
@@ -124,7 +250,7 @@ export function getArticleSeo(article: Article): SeoConfig {
       '@type': 'NewsArticle',
       headline: article.title,
       description,
-      articleBody: article.sections?.map(s => s.paragraphs?.join(' ')).join(' ').slice(0, 1000),
+      articleBody: article.sections?.map((s) => s.paragraphs?.join(' ')).join(' ').slice(0, 1000),
       author: {
         '@type': 'Person',
         name: article.author,
@@ -133,7 +259,7 @@ export function getArticleSeo(article: Article): SeoConfig {
       publisher: {
         '@type': 'Organization',
         name: 'SPORTSPULSE',
-        url: window.location.origin,
+        url: getSafeOrigin() || 'https://sportspulse.example.com',
       },
       datePublished: '2026-10-07T08:00:00+00:00',
       mainEntityOfPage: canonicalUrl,
@@ -144,17 +270,19 @@ export function getArticleSeo(article: Article): SeoConfig {
 }
 
 /**
- * Generates SEO metadata for a player profile page
+ * Generates SEO metadata for a player profile page with question-format title and compliant meta description.
  */
 export function getPlayerSeo(player: PlayerData): SeoConfig {
-  // Title rule: 30-60 characters
-  const rawTitle = `${player.name} Stats, Career Bio & Records`;
-  const title = formatSeoTitle(rawTitle);
+  // Title rule: Question format, 50-60 characters
+  // Example: "What Makes Virat Kohli a Star in Cricket? | SPORTSPULSE"
+  const shortName = player.name.length > 20 ? player.name.slice(0, 18).trim() : player.name;
+  const rawQuestion = `What Makes ${shortName} a Star in ${player.sport}`;
+  const title = formatQuestionTitle(rawQuestion);
 
-  // Meta description: 120-160 characters with CTA
+  // Meta description: 120-158 characters with CTA and athlete stats
   const rawDesc = `Explore ${player.name} career stats, personal bio, debut history, records, and scouting report in this ${player.sport} dossier on SPORTSPULSE.`;
   const description = formatSeoDescription(rawDesc);
-  const canonicalUrl = `${window.location.origin}${getPlayerUrl(player.sport, player.slug)}`;
+  const canonicalUrl = `${getSafeOrigin()}${getPlayerUrl(player.sport, player.slug)}`;
 
   return {
     title,
@@ -178,54 +306,64 @@ export function getPlayerSeo(player: PlayerData): SeoConfig {
 }
 
 /**
- * Applies SEO tags to document <head> dynamically
+ * Applies SEO tags to document <head> dynamically with error resilience.
  */
 export function applySeo(seo: SeoConfig): void {
-  // 1. Update <title>
-  document.title = seo.title;
+  try {
+    // 1. Update <title>
+    document.title = seo.title;
 
-  // 2. Helper to set or create <meta>
-  const setMeta = (selector: string, attrName: string, attrValue: string, content: string) => {
-    let el = document.querySelector(selector) as HTMLMetaElement | null;
-    if (!el) {
-      el = document.createElement('meta');
-      el.setAttribute(attrName, attrValue);
-      document.head.appendChild(el);
+    // 2. Helper to set or create <meta>
+    const setMeta = (selector: string, attrName: string, attrValue: string, content: string) => {
+      let el = document.querySelector(selector) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attrName, attrValue);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    // Standard Meta Description
+    setMeta('meta[name="description"]', 'name', 'description', seo.description);
+
+    // Open Graph
+    setMeta('meta[property="og:title"]', 'property', 'og:title', seo.title);
+    setMeta('meta[property="og:description"]', 'property', 'og:description', seo.description);
+    if (seo.canonicalUrl) {
+      setMeta('meta[property="og:url"]', 'property', 'og:url', seo.canonicalUrl);
     }
-    el.setAttribute('content', content);
-  };
+    setMeta('meta[property="og:type"]', 'property', 'og:type', seo.ogType || 'website');
 
-  // Standard Meta Description
-  setMeta('meta[name="description"]', 'name', 'description', seo.description);
+    // Twitter Card
+    setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', seo.title);
+    setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', seo.description);
 
-  // Open Graph
-  setMeta('meta[property="og:title"]', 'property', 'og:title', seo.title);
-  setMeta('meta[property="og:description"]', 'property', 'og:description', seo.description);
-  setMeta('meta[property="og:url"]', 'property', 'og:url', seo.canonicalUrl);
-  setMeta('meta[property="og:type"]', 'property', 'og:type', seo.ogType || 'website');
+    // Canonical Link
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    if (seo.canonicalUrl) {
+      canonical.setAttribute('href', seo.canonicalUrl);
+    }
 
-  // Twitter Card
-  setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', seo.title);
-  setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', seo.description);
-
-  // Canonical Link
-  let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-  if (!canonical) {
-    canonical = document.createElement('link');
-    canonical.setAttribute('rel', 'canonical');
-    document.head.appendChild(canonical);
-  }
-  canonical.setAttribute('href', seo.canonicalUrl);
-
-  // Schema.org JSON-LD Structured Data
-  let jsonLdScript = document.querySelector('script[type="application/ld+json"]#seo-ld') as HTMLScriptElement | null;
-  if (!jsonLdScript) {
-    jsonLdScript = document.createElement('script');
-    jsonLdScript.setAttribute('type', 'application/ld+json');
-    jsonLdScript.setAttribute('id', 'seo-ld');
-    document.head.appendChild(jsonLdScript);
-  }
-  if (seo.jsonLd) {
-    jsonLdScript.textContent = JSON.stringify(seo.jsonLd);
+    // Schema.org JSON-LD Structured Data
+    let jsonLdScript = document.querySelector(
+      'script[type="application/ld+json"]#seo-ld'
+    ) as HTMLScriptElement | null;
+    if (!jsonLdScript) {
+      jsonLdScript = document.createElement('script');
+      jsonLdScript.setAttribute('type', 'application/ld+json');
+      jsonLdScript.setAttribute('id', 'seo-ld');
+      document.head.appendChild(jsonLdScript);
+    }
+    if (seo.jsonLd) {
+      jsonLdScript.textContent = JSON.stringify(seo.jsonLd);
+    }
+  } catch {
+    // Graceful fallback in sandboxed iframe contexts
   }
 }

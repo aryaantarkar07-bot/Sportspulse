@@ -70,6 +70,12 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         href={profileUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={(e) => {
+          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
         title={`View ${player.name} profile in a new tab`}
         aria-label={`View ${player.name} ${player.sport} profile dossier in a new tab`}
         className="group cursor-pointer flex items-center gap-3 p-2.5 rounded-xl border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 transition-all shadow-2xs no-underline"
@@ -114,6 +120,12 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         href={profileUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={(e) => {
+          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
         title={`Explore ${player.name} ${player.sport} Dossier in a new tab`}
         aria-label={`Explore ${player.name} ${player.sport} Dossier, Career Statistics & Scouting Report in a new tab`}
         className="group cursor-pointer bg-white rounded-2xl border border-stone-200 overflow-hidden hover:border-stone-400 hover:shadow-md transition-all flex flex-col justify-between no-underline block"

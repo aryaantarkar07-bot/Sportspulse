@@ -55,10 +55,14 @@ export function getPlayerUrl(category: SportCategory, slug: string): string {
 export function parseCurrentRoute(): Route {
   // Support both clean pathname and hash-based routing (e.g. for static previews)
   let path = '';
-  if (window.location.hash && window.location.hash.startsWith('#/')) {
-    path = window.location.hash.slice(2);
-  } else if (window.location.pathname && window.location.pathname !== '/') {
-    path = window.location.pathname.replace(/^\/+/, '');
+  try {
+    if (window.location.hash && window.location.hash.startsWith('#/')) {
+      path = window.location.hash.slice(2);
+    } else if (window.location.pathname && window.location.pathname !== '/') {
+      path = window.location.pathname.replace(/^\/+/, '');
+    }
+  } catch {
+    path = '';
   }
 
   // Remove query strings if any
@@ -100,9 +104,18 @@ export function parseCurrentRoute(): Route {
 }
 
 export function navigateTo(url: string) {
-  if (window.location.pathname === url && !window.location.hash) {
-    return;
+  try {
+    if (window.location.pathname === url && !window.location.hash) {
+      return;
+    }
+    window.history.pushState({}, '', url);
+    window.dispatchEvent(new Event('popstate'));
+  } catch {
+    try {
+      window.location.hash = `#${url}`;
+      window.dispatchEvent(new Event('hashchange'));
+    } catch {
+      // safe fallback
+    }
   }
-  window.history.pushState({}, '', url);
-  window.dispatchEvent(new Event('popstate'));
 }

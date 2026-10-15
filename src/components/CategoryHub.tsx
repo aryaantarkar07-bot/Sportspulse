@@ -68,7 +68,13 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                 href={leadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`Read story: ${leadArticle.title} in a new tab`}
+                onClick={(e) => {
+                  if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                    e.preventDefault();
+                    onSelectArticle(leadArticle);
+                  }
+                }}
+                title={`Read story: ${leadArticle.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                 className="lg:col-span-7 block cursor-pointer no-underline"
               >
                 <SportsArtwork
@@ -78,6 +84,7 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                   aspectRatio="16/9"
                   className="w-full h-full min-h-[320px]"
                 />
+                <span className="sr-only">Read cover story: {leadArticle.title}</span>
               </a>
               <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-stone-50/50">
                 <div>
@@ -89,7 +96,13 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                       href={leadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title={`Read story: ${leadArticle.title} in a new tab`}
+                      onClick={(e) => {
+                        if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                          e.preventDefault();
+                          onSelectArticle(leadArticle);
+                        }
+                      }}
+                      title={`Read story: ${leadArticle.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                       className="font-editorial text-2xl sm:text-3xl font-bold text-stone-950 group-hover:text-rose-600 transition-colors leading-tight no-underline block"
                     >
                       {leadArticle.title}
@@ -106,6 +119,12 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                     href={leadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                        e.preventDefault();
+                        onSelectArticle(leadArticle);
+                      }
+                    }}
                     title={`Read Feature: ${leadArticle.title} in a new tab`}
                     className="text-rose-600 font-bold group-hover:translate-x-1 transition-transform no-underline flex items-center gap-1"
                   >
@@ -137,7 +156,13 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                         href={artUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        title={`Read story: ${art.title} in a new tab`}
+                        onClick={(e) => {
+                          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                            e.preventDefault();
+                            onSelectArticle(art);
+                          }
+                        }}
+                        title={`Read story: ${art.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                         className="aspect-[16/10] overflow-hidden block cursor-pointer no-underline"
                       >
                         <SportsArtwork
@@ -146,6 +171,7 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                           aspectRatio="16/9"
                           className="w-full h-full group-hover:scale-102 transition-transform"
                         />
+                        <span className="sr-only">Read story: {art.title}</span>
                       </a>
                       <div className="p-5">
                         <div className="text-[10px] font-mono uppercase text-stone-400 mb-1">
@@ -156,7 +182,13 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                             href={artUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            title={`Read story: ${art.title} in a new tab`}
+                            onClick={(e) => {
+                              if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                                e.preventDefault();
+                                onSelectArticle(art);
+                              }
+                            }}
+                            title={`Read story: ${art.title} (Click to read, Ctrl/Cmd+Click for new tab)`}
                             className="font-editorial text-lg sm:text-xl font-bold text-stone-900 group-hover:text-rose-600 transition-colors leading-snug no-underline block"
                           >
                             {art.title}
@@ -173,6 +205,12 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                         href={artUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={(e) => {
+                          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                            e.preventDefault();
+                            onSelectArticle(art);
+                          }
+                        }}
                         title={`Read Story: ${art.title} in a new tab`}
                         className="text-rose-600 font-semibold group-hover:translate-x-0.5 transition-transform no-underline flex items-center gap-1"
                       >
