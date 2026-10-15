@@ -441,7 +441,7 @@ export const PLAYERS: PlayerData[] = [
       '4x UEFA Champions League Titles'
     ],
     quote: 'It took me 17 years and 114 days to become an overnight success.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Lionel_Messi_20180626.jpg/480px-Lionel_Messi_20180626.jpg',
+    imageUrl: '/images/athletes/lionel-messi.jpg',
     accentColor: '#0EA5E9'
   },
   {
@@ -559,7 +559,7 @@ export const PLAYERS: PlayerData[] = [
       'Asian Games Gold Medal (Hangzhou 2023)'
     ],
     quote: 'A penalty corner is won in training sessions under total exhaustion. In the match, it is just muscle memory.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Harmanpreet_Singh_2022.jpg/480px-Harmanpreet_Singh_2022.jpg',
+    imageUrl: '/images/athletes/harmanpreet-singh.jpg',
     accentColor: '#047857'
   },
   {
@@ -748,7 +748,7 @@ export const PLAYERS: PlayerData[] = [
       'Kabaddi World Cup Winner 2016'
     ],
     quote: 'When the chain closes, drop your center of gravity and dive through.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Pardeep_Narwal_in_2019.jpg/480px-Pardeep_Narwal_in_2019.jpg',
+    imageUrl: '/images/athletes/pardeep-narwal.jpg',
     accentColor: '#D97706'
   },
   {
@@ -931,7 +931,7 @@ export const PLAYERS: PlayerData[] = [
       'Youngest ATP World No. 1 in history'
     ],
     quote: 'I play with heart, head, and courage on every single point.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Carlos_Alcaraz_%28ESP%29_2023.jpg/480px-Carlos_Alcaraz_%28ESP%29_2023.jpg',
+    imageUrl: '/images/athletes/carlos-alcaraz.jpg',
     accentColor: '#EA580C'
   },
   {
@@ -1119,7 +1119,7 @@ export const PLAYERS: PlayerData[] = [
       'All-Defensive First Team as a Rookie'
     ],
     quote: 'Limits are self-imposed. I want to build a completely new way to play this game.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Victor_Wembanyama_2023.jpg/480px-Victor_Wembanyama_2023.jpg',
+    imageUrl: '/images/athletes/victor-wembanyama.jpg',
     accentColor: '#18181B'
   },
   {
@@ -1268,8 +1268,45 @@ export const PLAYERS: PlayerData[] = [
   },
 
   // ==========================================
-  // 🏸 BADMINTON (5 Stars with Dossiers)
+  // 🏸 BADMINTON (6 Stars with Dossiers)
   // ==========================================
+  {
+    id: 'viktor-axelsen',
+    slug: 'viktor-axelsen',
+    name: 'Viktor Axelsen',
+    fullName: 'Viktor Axelsen (The Great Dane)',
+    sport: 'Badminton',
+    role: 'Men’s Singles World Champion & 2x Olympic Gold',
+    team: 'Denmark / BWF World Tour',
+    nationality: 'Denmark',
+    jerseyNumber: 1,
+    dateOfBirth: 'Jan 04, 1994 (Age 32)',
+    birthPlace: 'Odense, Denmark',
+    height: "6 ft 4 in (194 cm)",
+    worldRanking: '2x Olympic Gold Medalist · 2x BWF World Champion · World No. 1',
+    teamsPlayedFor: ['Denmark National Team', 'BWF World Tour'],
+    stats: '2x Olympic Gold (Tokyo 2020 & Paris 2024) · 450 km/h Smash · 650+ Career Wins',
+    statsTable: [
+      { format: 'Olympic Games (Tokyo & Paris)', matches: 12, goldMedals: 2, winRate: '100%' },
+      { format: 'BWF World Championships', matches: 38, goldMedals: 2, titles: 2, winRate: '87%' },
+      { format: 'BWF World Tour', matches: 340, titles: 32, winRate: '83%' },
+    ],
+    bio: 'The imposing Danish colossus whose steep, 450 km/h downhill smashes, unreachable court coverage, and unyielding psychological composure established back-to-back Olympic gold hegemony in men’s singles badminton.',
+    fullBio: [
+      'Hailing from Odense, Denmark, Axelsen trained tirelessly to turn his 6ft 4in frame into an unstoppable steep-angle attacking machine.',
+      'He won Olympic gold at Tokyo 2020 without dropping a set, and repeated the feat at Paris 2024 to join Lin Dan as the only two-time men’s singles Olympic champions in badminton history.'
+    ],
+    strengths: ['Steep-angle 450 km/h jump-smash from deep court', 'Net tumble deception and rapid recovery', 'Unshakeable pressure tolerance'],
+    careerHighlights: [
+      '2x Olympic Gold Medalist Men’s Singles (Tokyo 2020, Paris 2024)',
+      '2x BWF World Champion (2017, 2022)',
+      'Multiple All England Open Championships',
+      'Longest consecutive World No. 1 reign in modern badminton'
+    ],
+    quote: 'Stay humble, train harder than yesterday, and let the shuttle fly.',
+    imageUrl: '/images/athletes/viktor-axelsen.jpg',
+    accentColor: '#7C3AED'
+  },
   {
     id: 'pv-sindhu',
     slug: 'pv-sindhu',
@@ -1482,7 +1519,7 @@ export const PLAYERS: PlayerData[] = [
       'Youngest F1 race winner in history'
     ],
     quote: 'Simply lovely. We pushed every limit of the chassis and the rubber today.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Max_Verstappen_2023.jpg/480px-Max_Verstappen_2023.jpg',
+    imageUrl: '/images/athletes/max-verstappen.jpg',
     accentColor: '#1E3A8A'
   },
   {
@@ -1657,7 +1694,7 @@ export const PLAYERS: PlayerData[] = [
       '3x Commonwealth Games Gold Medalist'
     ],
     quote: 'The mat is where dignity is defended through sweat and honor. Never surrender your voice.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Vinesh_Phogat_2022.jpg/480px-Vinesh_Phogat_2022.jpg',
+    imageUrl: '/images/athletes/vinesh-phogat.jpg',
     accentColor: '#B91C1C'
   },
   {

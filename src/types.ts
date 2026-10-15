@@ -24,6 +24,7 @@ export interface FamousPersonality {
   signatureAction: string;
   avatarInitials: string;
   accentColor: string;
+  imageUrl?: string;
 }
 
 export interface SportEvent {
@@ -199,6 +200,8 @@ export interface Article {
   heroCaption: string;
   heroCredit: string;
   heroVariant?: ArtworkVariant;
+  imageUrl?: string;
+  heroImageUrl?: string;
   featuredPersonality?: FamousPersonality;
   supportingImages: SupportingImage[];
   accentColor: string;

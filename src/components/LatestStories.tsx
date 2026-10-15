@@ -55,6 +55,7 @@ export const LatestStories: React.FC<LatestStoriesProps> = ({ articles, onSelect
                     className="block rounded-xl overflow-hidden border border-stone-200 shadow-xs mb-4 cursor-pointer"
                   >
                     <SportsArtwork
+                      imageUrl={article.heroImageUrl || article.imageUrl || article.featuredPersonality?.imageUrl}
                       category={article.category}
                       title={article.title}
                       personality={article.featuredPersonality}

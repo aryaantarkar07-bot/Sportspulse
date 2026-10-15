@@ -78,6 +78,7 @@ export const CategoryHub: React.FC<CategoryHubProps> = ({
                 className="lg:col-span-7 block cursor-pointer no-underline"
               >
                 <SportsArtwork
+                  imageUrl={leadArticle.heroImageUrl || leadArticle.imageUrl || leadArticle.featuredPersonality?.imageUrl}
                   category={leadArticle.category}
                   title={leadArticle.title}
                   personality={leadArticle.featuredPersonality}

@@ -31,6 +31,7 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ article, onSelectArt
           className="group cursor-pointer rounded-2xl overflow-hidden border border-stone-200 shadow-sm mb-8 transition-all hover:border-stone-400 hover:shadow-lg block no-underline"
         >
           <SportsArtwork
+            imageUrl={article.heroImageUrl || article.imageUrl}
             category={article.category}
             title={article.title}
             variant={article.heroVariant || 'hero'}

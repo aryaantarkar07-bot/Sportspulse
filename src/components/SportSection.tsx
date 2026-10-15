@@ -79,6 +79,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
                 className="block rounded-xl overflow-hidden border border-stone-200 shadow-xs mb-5 cursor-pointer no-underline"
               >
                 <SportsArtwork
+                  imageUrl={largeArticle.heroImageUrl || largeArticle.imageUrl || largeArticle.featuredPersonality?.imageUrl}
                   category={largeArticle.category}
                   title={largeArticle.title}
                   personality={largeArticle.featuredPersonality}
@@ -158,6 +159,7 @@ export const SportSection: React.FC<SportSectionProps> = ({
                       className="sm:col-span-5 block rounded-lg overflow-hidden border border-stone-200 shadow-2xs cursor-pointer no-underline"
                     >
                       <SportsArtwork
+                        imageUrl={article.heroImageUrl || article.imageUrl || article.featuredPersonality?.imageUrl}
                         category={article.category}
                         title={article.title}
                         aspectRatio="4/3"

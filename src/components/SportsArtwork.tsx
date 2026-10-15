@@ -15,6 +15,7 @@ interface SportsArtworkProps {
   aspectRatio?: '16/9' | '4/3' | '3/2' | '21/9' | '1/1';
   priority?: boolean;
   alt?: string;
+  imageUrl?: string;
 }
 
 export const SportsArtwork: React.FC<SportsArtworkProps> = ({
@@ -27,7 +28,11 @@ export const SportsArtwork: React.FC<SportsArtworkProps> = ({
   className = '',
   aspectRatio = '16/9',
   alt,
+  imageUrl,
+  priority,
 }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const [imgLoaded, setImgLoaded] = React.useState(false);
   // Descriptive alt text for SEO and accessibility
   const computedAlt =
     alt ||
@@ -192,6 +197,116 @@ export const SportsArtwork: React.FC<SportsArtworkProps> = ({
     }
   };
 
+  const effectiveImageUrl = imageUrl || personality?.imageUrl;
+
+  if (effectiveImageUrl && !imgError) {
+    const isTime100 = personality?.name?.includes('Yashasvi') || title.includes('Jaiswal');
+    const badgeLabel = isTime100
+      ? 'TIME100 NEXT · FEATURED STAR'
+      : personality?.name === 'Lionel Messi'
+      ? 'FIFA WORLD CUP CHAMPION · 8X BALLON D’OR'
+      : personality?.name === 'Harmanpreet Singh'
+      ? '2X OLYMPIC MEDALIST · SARPANCH OF HOCKEY'
+      : personality?.name === 'Pardeep Narwal'
+      ? 'PRO KABADDI RECORD BREAKER · DUBKI KING'
+      : personality?.name === 'Carlos Alcaraz'
+      ? '4X GRAND SLAM CHAMPION · WORLD NO. 1'
+      : personality?.name === 'Victor Wembanyama'
+      ? 'NBA ROOKIE OF THE YEAR · UNICORN DEFENDER'
+      : personality?.name === 'Viktor Axelsen'
+      ? '2X OLYMPIC GOLD MEDALIST · WORLD CHAMPION'
+      : personality?.name === 'Max Verstappen'
+      ? '4X FORMULA 1 WORLD CHAMPION · RED BULL RACING'
+      : personality?.name === 'Vinesh Phogat'
+      ? 'OLYMPIC FINALIST · 3X COMMONWEALTH GOLD'
+      : personality?.honors
+      ? `${personality.name.toUpperCase()} · ICONIC SPOTLIGHT`
+      : `${category.toUpperCase()} · FEATURED EDITORIAL`;
+
+    const creditLabel = isTime100
+      ? 'Photo: The Economic Times / TIME100 Next Archive'
+      : personality?.name === 'Lionel Messi'
+      ? 'Photo: Britannica / FIFA World Cup Archive'
+      : personality?.name === 'Harmanpreet Singh'
+      ? 'Photo: Mans World India / Hockey India'
+      : personality?.name === 'Pardeep Narwal'
+      ? 'Photo: Sportzcraazy / Pro Kabaddi Archive'
+      : personality?.name === 'Carlos Alcaraz'
+      ? 'Photo: ATP Tour Archive / Editorial SportsPulse'
+      : personality?.name === 'Victor Wembanyama'
+      ? 'Photo: San Antonio Spurs / Wikimedia Commons'
+      : personality?.name === 'Viktor Axelsen'
+      ? 'Photo: BWF World Tour Lens / SportsPulse Archive'
+      : personality?.name === 'Max Verstappen'
+      ? 'Photo: Motorsport Lens by Stepro / Wikimedia Commons'
+      : personality?.name === 'Vinesh Phogat'
+      ? 'Photo: Team India Wrestling / Official Profile Archive'
+      : 'Photo: SportsPulse Editorial Archive';
+
+    return (
+      <div
+        role="img"
+        aria-label={computedAlt}
+        className={`relative overflow-hidden bg-stone-950 text-white select-none ${className}`}
+        style={{ aspectRatio }}
+      >
+        <img
+          src={effectiveImageUrl}
+          alt={computedAlt}
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          className={`w-full h-full object-cover object-top sm:object-center transition-all duration-700 ease-out group-hover:scale-103 ${
+            imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+          }`}
+          loading={priority ? 'eager' : 'lazy'}
+        />
+
+        {/* Cinematic gradient overlay ensuring text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/35 pointer-events-none" />
+
+        {/* Editorial overlay */}
+        <div className="absolute inset-0 p-4 sm:p-6 flex flex-col justify-between pointer-events-none z-10">
+          {/* Top Badge */}
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-md text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase text-white flex items-center gap-1.5 border border-white/20">
+                <Flame className="w-3.5 h-3.5 text-rose-400 fill-current" />
+                <span>{badgeLabel}</span>
+              </span>
+              <span className="text-[10px] sm:text-xs font-mono text-white/80 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded hidden sm:inline">
+                {personality?.country || 'International'} · {category}
+              </span>
+            </div>
+
+            {personality?.jerseyNumber && (
+              <span className="text-3xl sm:text-5xl font-black font-mono text-white/40 leading-none select-none drop-shadow-md">
+                #{personality.jerseyNumber}
+              </span>
+            )}
+          </div>
+
+          {/* Bottom Credit / Signature */}
+          <div className="pt-3 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-white/90 gap-1 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-3 sm:p-4 -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 rounded-b-2xl">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-[11px] uppercase tracking-wider text-white/90">
+                FEATURED: <span className="text-white font-bold">{personality?.name || title}</span>
+              </span>
+              {personality?.signatureAction && (
+                <span className="text-[10px] font-mono text-amber-300 hidden md:inline">
+                  ({personality.signatureAction})
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] sm:text-[11px] font-mono text-white/70">
+              {creditLabel}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const theme = getTheme();
 
   return (
@@ -244,12 +359,21 @@ export const SportsArtwork: React.FC<SportsArtworkProps> = ({
           {/* Center: Stylized Athlete Avatar Lockup */}
           <div className="my-auto flex items-center gap-4 sm:gap-6">
             {/* Visual Athlete Emblem */}
-            <div className="relative w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-br from-white/25 to-white/5 backdrop-blur-md border border-white/30 flex items-center justify-center shrink-0 shadow-2xl">
-              <span className="text-2xl sm:text-4xl font-extrabold font-mono tracking-tighter text-white drop-shadow-md">
-                {personality.avatarInitials}
-              </span>
+            <div className="relative w-16 h-16 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-br from-white/25 to-white/5 backdrop-blur-md border border-white/30 flex items-center justify-center shrink-0 shadow-2xl overflow-hidden">
+              {personality.imageUrl ? (
+                <img
+                  src={personality.imageUrl}
+                  alt={personality.name}
+                  className="w-full h-full object-cover object-top"
+                  loading="lazy"
+                />
+              ) : (
+                <span className="text-2xl sm:text-4xl font-extrabold font-mono tracking-tighter text-white drop-shadow-md">
+                  {personality.avatarInitials}
+                </span>
+              )}
               <div
-                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-stone-900 flex items-center justify-center text-[10px] font-bold"
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-stone-900 flex items-center justify-center text-[10px] font-bold text-white z-10"
                 style={{ backgroundColor: personality.accentColor || theme.accent }}
               >
                 ★

@@ -27,9 +27,11 @@ export const ARTICLES: Article[] = [
     date: 'October 7, 2026',
     readTime: '15 min read',
     wordCount: 3420,
-    heroCaption: 'Yashasvi Jaiswal celebrates another commanding three-figure knock, embodying India’s fearless new approach to top-order batsmanship.',
-    heroCredit: 'Photo: SportsPulse Editorial / High-Speed Sports Archive',
+    heroCaption: 'TIME100 Next honoree Yashasvi Jaiswal celebrates with arms aloft, embodying India’s fearless new approach to top-order batsmanship.',
+    heroCredit: 'Photo: The Economic Times / TIME100 Next Archive',
     heroVariant: 'player',
+    imageUrl: '/images/yashasvi-jaiswal-time100.jpg',
+    heroImageUrl: '/images/yashasvi-jaiswal-time100.jpg',
     accentColor: '#C8102E',
     isFeatured: true,
     isTrending: true,
@@ -261,9 +263,11 @@ export const ARTICLES: Article[] = [
     date: 'October 6, 2026',
     readTime: '13 min read',
     wordCount: 2980,
-    heroCaption: 'Lionel Messi and Lamine Yamal represent football’s timeless continuum: spatial intelligence that transcends rigid positions.',
-    heroCredit: 'Photo: SportsPulse International / UEFA Champions League Lens',
+    heroCaption: 'Lionel Messi celebrates with arms outstretched, orchestrating play with unmatched vision and spatial intelligence.',
+    heroCredit: 'Photo: Britannica / FIFA World Cup Archive',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/lionel-messi.jpg',
+    heroImageUrl: '/images/athletes/lionel-messi.jpg',
     accentColor: '#1E3A8A',
     isTrending: true,
     trendingRank: 2,
@@ -277,7 +281,8 @@ export const ARTICLES: Article[] = [
       honors: "8x Ballon d'Or · FIFA World Cup Champion · 4x Champions League",
       signatureAction: "Half-Space Inverted Passing & 30-Yard Spatial Vision",
       avatarInitials: "LM",
-      accentColor: "#38BDF8"
+      accentColor: "#38BDF8",
+      imageUrl: '/images/athletes/lionel-messi.jpg'
     },
     supportingImages: [
       {
@@ -463,8 +468,10 @@ export const ARTICLES: Article[] = [
     readTime: '14 min read',
     wordCount: 3120,
     heroCaption: 'Pardeep Narwal, the iconic Record-Breaker, prepares to execute his legendary low-level Dubki.',
-    heroCredit: 'Photo: SportsPulse Editorial / High-Speed Flash Photography',
+    heroCredit: 'Photo: Sportzcraazy / Pro Kabaddi Archive',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/pardeep-narwal.jpg',
+    heroImageUrl: '/images/athletes/pardeep-narwal.jpg',
     accentColor: '#D97706',
     isTrending: true,
     trendingRank: 3,
@@ -478,7 +485,8 @@ export const ARTICLES: Article[] = [
       honors: "3x Pro Kabaddi Champion · All-Time Highest Raid Points (1,600+) · 8-Point Super Raid",
       signatureAction: "The 32cm Floor-Level Dubki Slide",
       avatarInitials: "PN",
-      accentColor: "#FBBF24"
+      accentColor: "#FBBF24",
+      imageUrl: '/images/athletes/pardeep-narwal.jpg'
     },
     supportingImages: [
       {
@@ -653,8 +661,10 @@ export const ARTICLES: Article[] = [
     readTime: '12 min read',
     wordCount: 2650,
     heroCaption: 'Harmanpreet Singh, the Sarpanch of Indian hockey, coils into position to unleash a 122 km/h drag flick.',
-    heroCredit: 'Photo: International Hockey Archives / SportsPulse',
+    heroCredit: 'Photo: Mans World India / Hockey India',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/harmanpreet-singh.jpg',
+    heroImageUrl: '/images/athletes/harmanpreet-singh.jpg',
     accentColor: '#059669',
     isTrending: true,
     trendingRank: 4,
@@ -668,7 +678,8 @@ export const ARTICLES: Article[] = [
       honors: "Olympic Bronze Medalist (Tokyo & Paris) · 2x FIH Player of the Year · World's Top Drag-Flicker",
       signatureAction: "122 km/h Whiplash Drag-Flick to the Top Corner",
       avatarInitials: "HS",
-      accentColor: "#34D399"
+      accentColor: "#34D399",
+      imageUrl: '/images/athletes/harmanpreet-singh.jpg'
     },
     supportingImages: [
       {
@@ -825,6 +836,8 @@ export const ARTICLES: Article[] = [
     heroCaption: 'Carlos Alcaraz unleashes his venomous 3,400 RPM forehand, combining lightning foot speed with relentless aggression.',
     heroCredit: 'Photo: ATP Tour Archive / SportsPulse Lens',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/carlos-alcaraz.jpg',
+    heroImageUrl: '/images/athletes/carlos-alcaraz.jpg',
     accentColor: '#0284C7',
     isTrending: true,
     trendingRank: 5,
@@ -838,7 +851,8 @@ export const ARTICLES: Article[] = [
       honors: "4x Grand Slam Champion · Youngest World No. 1 · Wimbledon & French Open Champion",
       signatureAction: "3,400 RPM Open-Stance Forehand Laser & Drop Shot",
       avatarInitials: "CA",
-      accentColor: "#38BDF8"
+      accentColor: "#38BDF8",
+      imageUrl: '/images/athletes/carlos-alcaraz.jpg'
     },
     supportingImages: [
       {
@@ -991,8 +1005,10 @@ export const ARTICLES: Article[] = [
     readTime: '13 min read',
     wordCount: 2890,
     heroCaption: 'Max Verstappen pushes the limits of downforce and mechanical grip in his title defense.',
-    heroCredit: 'Photo: Formula 1 Engineering Archive / SportsPulse',
+    heroCredit: 'Photo: Motorsport Lens by Stepro / Wikimedia Commons',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/max-verstappen.jpg',
+    heroImageUrl: '/images/athletes/max-verstappen.jpg',
     accentColor: '#DC2626',
     featuredPersonality: {
       name: "Max Verstappen",
@@ -1004,7 +1020,8 @@ export const ARTICLES: Article[] = [
       honors: "Multiple Formula 1 World Champion · Record 19 Wins in a Season · 1,000+ Laps Led",
       signatureAction: "Sub-Millimeter Apex Placement & Tire Energy Preservation",
       avatarInitials: "MV",
-      accentColor: "#EF4444"
+      accentColor: "#EF4444",
+      imageUrl: '/images/athletes/max-verstappen.jpg'
     },
     supportingImages: [
       {
@@ -1325,6 +1342,8 @@ export const ARTICLES: Article[] = [
     heroCaption: 'Viktor Axelsen towers over the court, ready to deploy his unreturnable steep smash.',
     heroCredit: 'Photo: BWF World Tour Lens / SportsPulse',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/viktor-axelsen.jpg',
+    heroImageUrl: '/images/athletes/viktor-axelsen.jpg',
     accentColor: '#7C3AED',
     featuredPersonality: {
       name: "Viktor Axelsen",
@@ -1336,7 +1355,8 @@ export const ARTICLES: Article[] = [
       honors: "2x Olympic Gold Medalist · 2x World Champion · Multiple All England Champion",
       signatureAction: "450 km/h Supersonic Jump-Smash & Steep Angle Net Kill",
       avatarInitials: "VA",
-      accentColor: "#A855F7"
+      accentColor: "#A855F7",
+      imageUrl: '/images/athletes/viktor-axelsen.jpg'
     },
     supportingImages: [
       {
@@ -1489,8 +1509,10 @@ export const ARTICLES: Article[] = [
     readTime: '11 min read',
     wordCount: 2510,
     heroCaption: 'Victor Wembanyama brings the ball up the floor, an 8-foot wingspan unicorn breaking every convention of positional basketball.',
-    heroCredit: 'Photo: FIBA / NBA International Archive',
+    heroCredit: 'Photo: San Antonio Spurs / Wikimedia Commons',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/victor-wembanyama.jpg',
+    heroImageUrl: '/images/athletes/victor-wembanyama.jpg',
     accentColor: '#D97706',
     featuredPersonality: {
       name: "Victor Wembanyama",
@@ -1502,7 +1524,8 @@ export const ARTICLES: Article[] = [
       honors: "NBA Rookie of the Year · Olympic Silver Medalist · 8-Foot Wingspan Unicorn",
       signatureAction: "Positionless Crossover Dribble & 30-Foot Stepback Three",
       avatarInitials: "VW",
-      accentColor: "#F59E0B"
+      accentColor: "#F59E0B",
+      imageUrl: '/images/athletes/victor-wembanyama.jpg'
     },
     supportingImages: [
       {
@@ -1655,8 +1678,10 @@ export const ARTICLES: Article[] = [
     readTime: '12 min read',
     wordCount: 2610,
     heroCaption: 'Vinesh Phogat embodies the indomitable warrior spirit of Indian combat sport, forging triumph from hardship.',
-    heroCredit: 'Photo: SportsPulse Documentary Expedition / Haryana',
+    heroCredit: 'Photo: Team India Wrestling / Official Profile Archive',
     heroVariant: 'player',
+    imageUrl: '/images/athletes/vinesh-phogat.jpg',
+    heroImageUrl: '/images/athletes/vinesh-phogat.jpg',
     accentColor: '#B91C1C',
     featuredPersonality: {
       name: "Vinesh Phogat",
@@ -1668,7 +1693,8 @@ export const ARTICLES: Article[] = [
       honors: "Olympic Finalist · Multiple World Championship Medalist · Commonwealth Games Gold",
       signatureAction: "Explosive Low-Level Double-Leg Takedown & Counter-Tilt",
       avatarInitials: "VP",
-      accentColor: "#DC2626"
+      accentColor: "#DC2626",
+      imageUrl: '/images/athletes/vinesh-phogat.jpg'
     },
     supportingImages: [
       {

@@ -297,6 +297,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           className="group relative rounded-2xl overflow-hidden border border-stone-200 shadow-sm cursor-pointer"
         >
           <SportsArtwork
+            imageUrl={article.heroImageUrl || article.imageUrl}
             category={article.category}
             title={article.title}
             variant={article.heroVariant || 'player'}
@@ -793,8 +794,10 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
                   <div>
                     <div className="aspect-[16/10] overflow-hidden">
                       <SportsArtwork
+                        imageUrl={rel.heroImageUrl || rel.imageUrl || rel.featuredPersonality?.imageUrl}
                         category={rel.category}
                         title={rel.title}
+                        personality={rel.featuredPersonality}
                         aspectRatio="16/9"
                         className="w-full h-full group-hover:scale-102 transition-transform duration-300"
                       />

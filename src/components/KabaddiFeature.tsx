@@ -119,8 +119,10 @@ export const KabaddiFeature: React.FC<KabaddiFeatureProps> = ({
             <div className="relative rounded-2xl overflow-hidden border border-stone-200 shadow-md bg-stone-950 text-white">
               <div className="relative aspect-video">
                 <SportsArtwork
+                  imageUrl={article.heroImageUrl || article.imageUrl || article.featuredPersonality?.imageUrl}
                   category="Kabaddi"
                   title="Masterclass: The Biomechanics of the Pro Kabaddi Dubki"
+                  personality={article.featuredPersonality}
                   aspectRatio="16/9"
                   className="w-full h-full opacity-80"
                 />
