@@ -28,6 +28,7 @@ import { TrendingList } from './components/TrendingList';
 import { ArticleView } from './components/ArticleView';
 import { CategoryHub } from './components/CategoryHub';
 import { PlayerProfileView } from './components/PlayerProfileView';
+import { NotFoundPage } from './components/NotFoundPage';
 import { SearchModal } from './components/SearchModal';
 import { SavedModal } from './components/SavedModal';
 import { ArchitectureModal } from './components/ArchitectureModal';
@@ -47,12 +48,15 @@ import {
   getCategorySeo,
   getArticleSeo,
   getPlayerSeo,
+  getNotFoundSeo,
 } from './utils/seo';
 
 export default function App() {
   const [activeCategory, setActiveCategory] = useState<SportCategory | 'ALL'>('ALL');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerData | null>(null);
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [notFoundAttemptedPath, setNotFoundAttemptedPath] = useState<string | undefined>(undefined);
   const [searchOpen, setSearchOpen] = useState(false);
   const [savedModalOpen, setSavedModalOpen] = useState(false);
   const [architectureOpen, setArchitectureOpen] = useState(false);
@@ -81,11 +85,15 @@ export default function App() {
       const route = parseCurrentRoute();
 
       if (route.type === 'home') {
+        setIsNotFound(false);
+        setNotFoundAttemptedPath(undefined);
         setSelectedArticle(null);
         setSelectedPlayer(null);
         setActiveCategory('ALL');
         applySeo(getHomeSeo());
       } else if (route.type === 'category') {
+        setIsNotFound(false);
+        setNotFoundAttemptedPath(undefined);
         setSelectedArticle(null);
         setSelectedPlayer(null);
         setActiveCategory(route.category);
@@ -93,20 +101,42 @@ export default function App() {
       } else if (route.type === 'article') {
         const art =
           ARTICLES.find((a) => a.slug === route.slug || a.id === route.slug) || null;
-        setSelectedArticle(art);
-        setSelectedPlayer(null);
         if (art) {
+          setIsNotFound(false);
+          setNotFoundAttemptedPath(undefined);
+          setSelectedArticle(art);
+          setSelectedPlayer(null);
           setActiveCategory(art.category);
           applySeo(getArticleSeo(art));
+        } else {
+          setIsNotFound(true);
+          setNotFoundAttemptedPath(window.location.pathname || route.slug);
+          setSelectedArticle(null);
+          setSelectedPlayer(null);
+          applySeo(getNotFoundSeo(route.slug));
         }
       } else if (route.type === 'player') {
         const p = getPlayerBySlug(route.slug);
-        setSelectedPlayer(p || null);
-        setSelectedArticle(null);
         if (p) {
+          setIsNotFound(false);
+          setNotFoundAttemptedPath(undefined);
+          setSelectedPlayer(p);
+          setSelectedArticle(null);
           setActiveCategory(p.sport);
           applySeo(getPlayerSeo(p));
+        } else {
+          setIsNotFound(true);
+          setNotFoundAttemptedPath(window.location.pathname || route.slug);
+          setSelectedPlayer(null);
+          setSelectedArticle(null);
+          applySeo(getNotFoundSeo(route.slug));
         }
+      } else if (route.type === 'not-found') {
+        setIsNotFound(true);
+        setNotFoundAttemptedPath(route.attemptedPath || window.location.pathname);
+        setSelectedArticle(null);
+        setSelectedPlayer(null);
+        applySeo(getNotFoundSeo(route.attemptedPath));
       }
     };
 
@@ -191,6 +221,7 @@ export default function App() {
 
   // Navigation handlers that update clean semantic URLs
   const handleSelectArticle = (art: Article) => {
+    setIsNotFound(false);
     setSelectedArticle(art);
     setSelectedPlayer(null);
     navigateTo(getArticleUrl(art.category, art.slug));
@@ -199,6 +230,7 @@ export default function App() {
   };
 
   const handleSelectPlayer = (player: PlayerData) => {
+    setIsNotFound(false);
     setSelectedPlayer(player);
     setSelectedArticle(null);
     navigateTo(getPlayerUrl(player.sport, player.slug));
@@ -207,6 +239,7 @@ export default function App() {
   };
 
   const handleSelectCategory = (cat: SportCategory | 'ALL') => {
+    setIsNotFound(false);
     setActiveCategory(cat);
     setSelectedArticle(null);
     setSelectedPlayer(null);
@@ -221,6 +254,7 @@ export default function App() {
   };
 
   const handleNavigateHome = () => {
+    setIsNotFound(false);
     setSelectedArticle(null);
     setSelectedPlayer(null);
     setActiveCategory('ALL');
@@ -244,7 +278,15 @@ export default function App() {
 
       {/* Main View Switcher */}
       <main className="flex-1">
-        {selectedPlayer ? (
+        {isNotFound ? (
+          <NotFoundPage
+            onNavigateHome={handleNavigateHome}
+            onSelectCategory={handleSelectCategory}
+            onSelectArticle={handleSelectArticle}
+            onOpenSearch={() => setSearchOpen(true)}
+            attemptedPath={notFoundAttemptedPath}
+          />
+        ) : selectedPlayer ? (
           /* Cricbuzz-Inspired Athlete Dossier Profile Page */
           <PlayerProfileView
             player={selectedPlayer}

@@ -4,7 +4,8 @@ export type Route =
   | { type: 'home' }
   | { type: 'category'; category: SportCategory }
   | { type: 'article'; category?: SportCategory; slug: string }
-  | { type: 'player'; category?: SportCategory; slug: string };
+  | { type: 'player'; category?: SportCategory; slug: string }
+  | { type: 'not-found'; attemptedPath?: string };
 
 const SPORT_SLUG_MAP: Record<SportCategory, string> = {
   Cricket: 'cricket',
@@ -38,6 +39,10 @@ export function getSportFromSlug(slug: string): SportCategory | null {
 
 export function getHomeUrl(): string {
   return '/';
+}
+
+export function getNotFoundUrl(): string {
+  return '/404';
 }
 
 export function getCategoryUrl(category: SportCategory): string {
@@ -74,12 +79,20 @@ export function parseCurrentRoute(): Route {
 
   const segments = path.split('/').filter(Boolean);
 
+  // Direct 404 route check
+  if (segments.length === 1 && segments[0] === '404') {
+    return { type: 'not-found', attemptedPath: '/404' };
+  }
+
   // Pattern 1: /player/:playerSlug or /:sport/player/:playerSlug
   if (segments.length === 2 && segments[0] === 'player') {
     return { type: 'player', slug: segments[1] };
   }
   if (segments.length === 3 && segments[1] === 'player') {
-    const category = getSportFromSlug(segments[0]) || undefined;
+    const category = getSportFromSlug(segments[0]);
+    if (!category) {
+      return { type: 'not-found', attemptedPath: `/${path}` };
+    }
     return { type: 'player', category, slug: segments[2] };
   }
 
@@ -88,7 +101,10 @@ export function parseCurrentRoute(): Route {
     return { type: 'article', slug: segments[1] };
   }
   if (segments.length === 3 && segments[1] === 'article') {
-    const category = getSportFromSlug(segments[0]) || undefined;
+    const category = getSportFromSlug(segments[0]);
+    if (!category) {
+      return { type: 'not-found', attemptedPath: `/${path}` };
+    }
     return { type: 'article', category, slug: segments[2] };
   }
 
@@ -98,9 +114,12 @@ export function parseCurrentRoute(): Route {
     if (category) {
       return { type: 'category', category };
     }
+    // Unrecognized single segment -> 404
+    return { type: 'not-found', attemptedPath: `/${path}` };
   }
 
-  return { type: 'home' };
+  // Any other unmatched path pattern -> 404
+  return { type: 'not-found', attemptedPath: `/${path}` };
 }
 
 export function navigateTo(url: string) {

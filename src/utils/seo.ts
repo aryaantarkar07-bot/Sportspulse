@@ -25,6 +25,26 @@ export function getSafeOrigin(): string {
 }
 
 /**
+ * Constructs a fully qualified, normalized self-referencing canonical URL
+ * for any given page or route, stripping extraneous query strings and trailing slashes.
+ */
+export function buildCanonicalUrl(path: string): string {
+  const origin = getSafeOrigin();
+  // Clean query strings or hashes if present
+  let cleanPath = (path || '/').split('?')[0].split('#')[0];
+  if (!cleanPath.startsWith('/')) {
+    cleanPath = `/${cleanPath}`;
+  }
+  // Normalize double slashes
+  cleanPath = cleanPath.replace(/\/+/g, '/');
+  // Root remains '/', all sub-paths have trailing slashes stripped
+  if (cleanPath.length > 1) {
+    cleanPath = cleanPath.replace(/\/+$/, '');
+  }
+  return origin ? `${origin}${cleanPath}` : cleanPath;
+}
+
+/**
  * Formats a question title to strictly conform to meta title length rules (50-60 characters)
  * and guarantees a question mark before the brand suffix.
  */
@@ -164,7 +184,7 @@ export function getHomeSeo(): SeoConfig {
   const title = 'news sports news: what are the top sports stories today? | SPORTSPULSE'; // Starts with 'news sports news'
   const description =
     'Explore the sports news and sports news today with deep tactical breakdowns, athlete records, breaking global match results, and journalism on SPORTSPULSE.'; // 155 chars (150-160 chars)
-  const canonicalUrl = `${getSafeOrigin()}/`;
+  const canonicalUrl = buildCanonicalUrl('/');
 
   return {
     title,
@@ -175,7 +195,7 @@ export function getHomeSeo(): SeoConfig {
       '@context': 'https://schema.org',
       '@type': 'NewsMediaOrganization',
       name: 'SPORTSPULSE',
-      url: getSafeOrigin() || 'https://sportspulse.example.com',
+      url: canonicalUrl,
       logo: `${getSafeOrigin()}/icon.png`,
       slogan: 'EVERY SPORT. EVERY STORY. EVERY DAY.',
       description,
@@ -196,7 +216,7 @@ export function getCategorySeo(category: SportCategory): SeoConfig {
   const description =
     CATEGORY_META_DESCRIPTIONS[category] ||
     `Explore ${category} breaking stories, deep tactical breakdowns, tournament coverage, and athlete dossiers. Read full coverage on SPORTSPULSE.`;
-  const canonicalUrl = `${getSafeOrigin()}${getCategoryUrl(category)}`;
+  const canonicalUrl = buildCanonicalUrl(getCategoryUrl(category));
 
   return {
     title,
@@ -238,7 +258,7 @@ export function getArticleSeo(article: Article): SeoConfig {
     description = formatSeoDescription(raw);
   }
 
-  const canonicalUrl = `${getSafeOrigin()}${getArticleUrl(article.category, article.slug)}`;
+  const canonicalUrl = buildCanonicalUrl(getArticleUrl(article.category, article.slug));
 
   return {
     title,
@@ -282,7 +302,7 @@ export function getPlayerSeo(player: PlayerData): SeoConfig {
   // Meta description: 120-158 characters with CTA and athlete stats
   const rawDesc = `Explore ${player.name} career stats, personal bio, debut history, records, and scouting report in this ${player.sport} dossier on SPORTSPULSE.`;
   const description = formatSeoDescription(rawDesc);
-  const canonicalUrl = `${getSafeOrigin()}${getPlayerUrl(player.sport, player.slug)}`;
+  const canonicalUrl = buildCanonicalUrl(getPlayerUrl(player.sport, player.slug));
 
   return {
     title,
@@ -306,6 +326,20 @@ export function getPlayerSeo(player: PlayerData): SeoConfig {
 }
 
 /**
+ * Generates SEO metadata for 404 Not Found pages.
+ */
+export function getNotFoundSeo(attemptedPath?: string): SeoConfig {
+  const canonicalUrl = buildCanonicalUrl(attemptedPath || '/404');
+  return {
+    title: '404: Play Not Found · Whistle Blown | SPORTSPULSE',
+    description:
+      'The requested sports dispatch, article, or player dossier stepped out of bounds. Explore our cricket, football, kabaddi, and multi-sport desks.',
+    canonicalUrl,
+    ogType: 'website',
+  };
+}
+
+/**
  * Applies SEO tags to document <head> dynamically with error resilience.
  */
 export function applySeo(seo: SeoConfig): void {
@@ -313,7 +347,10 @@ export function applySeo(seo: SeoConfig): void {
     // 1. Update <title>
     document.title = seo.title;
 
-    // 2. Helper to set or create <meta>
+    // 2. Guaranteed self-referencing canonical URL
+    const canonicalHref = seo.canonicalUrl || buildCanonicalUrl(window.location.pathname);
+
+    // 3. Helper to set or create <meta>
     const setMeta = (selector: string, attrName: string, attrValue: string, content: string) => {
       let el = document.querySelector(selector) as HTMLMetaElement | null;
       if (!el) {
@@ -330,25 +367,23 @@ export function applySeo(seo: SeoConfig): void {
     // Open Graph
     setMeta('meta[property="og:title"]', 'property', 'og:title', seo.title);
     setMeta('meta[property="og:description"]', 'property', 'og:description', seo.description);
-    if (seo.canonicalUrl) {
-      setMeta('meta[property="og:url"]', 'property', 'og:url', seo.canonicalUrl);
-    }
+    setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalHref);
     setMeta('meta[property="og:type"]', 'property', 'og:type', seo.ogType || 'website');
 
     // Twitter Card
     setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', seo.title);
     setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', seo.description);
+    setMeta('meta[name="twitter:url"]', 'name', 'twitter:url', canonicalHref);
 
-    // Canonical Link
+    // Self-Referencing Canonical Tag: Essential for Google indexing & consolidation
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
       canonical = document.createElement('link');
       canonical.setAttribute('rel', 'canonical');
+      canonical.setAttribute('id', 'canonical-link');
       document.head.appendChild(canonical);
     }
-    if (seo.canonicalUrl) {
-      canonical.setAttribute('href', seo.canonicalUrl);
-    }
+    canonical.setAttribute('href', canonicalHref);
 
     // Schema.org JSON-LD Structured Data
     let jsonLdScript = document.querySelector(
