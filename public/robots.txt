@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Canonical Sitemap for Google Search Console & Web Crawlers
+Sitemap: https://ais-pre-7jtq3bibuqbctz7nykc3nk-914880582772.asia-southeast1.run.app/sitemap.xml

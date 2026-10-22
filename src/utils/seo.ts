@@ -19,9 +19,9 @@ export function getSafeOrigin(): string {
       return window.location.origin;
     }
   } catch {
-    // fallback
+    // fallback to production applet domain
   }
-  return '';
+  return 'https://ais-pre-7jtq3bibuqbctz7nykc3nk-914880582772.asia-southeast1.run.app';
 }
 
 /**
